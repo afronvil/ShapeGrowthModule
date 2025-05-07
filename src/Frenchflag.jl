@@ -4,9 +4,27 @@ using Plots
 include("struct_cell_env.jl")
 include("initialization.jl")
 # --- Initialisation et paramètres ---
-#cell_types_sequence = [4,2,1]
-#max_div_sequence = [5, 10, 5, 5] 
-cell_types_sequence = [1, 2, 3, 1]
+
+xml_file = "cellTypesChange.xml"
+
+num_steps = 20
+grid_size = (30, 30)
+max_cell_division = 6
+
+toto
+
+
+cases = Dict(
+    1 => [(0, -1)],
+    2 => [(-1, 0)]
+    3 => [(0, 1)],
+    4 => [(0, -1)],
+    5 => [(1, -1)],
+    6 => [(-1, -1)],
+)
+
+
+
 
 
 
