@@ -1,36 +1,12 @@
-using Random
+
 using ColorSchemes
 using Plots
-
-# --- Initialisation et paramètres ---
-cell_types_to_load = [12]
-#cell_types_to_load = [2, 4, 3, 1]
 include("struct_cell_env.jl")
-include("functions.jl")
-include("data_xml.jl")
-include("visualization_xml.jl")
+include("initialization.jl")
 # --- Initialisation et paramètres ---
-
-xml_file = "cellTypesChange.xml"
-
-num_steps = 20
-grid_size = (30, 30)
-max_cell_division = 6
-
-
-
-
-cases = Dict(
-    1 => [(0, -1)],
-    2 => [(-1, 0)],
-    3 => [(0, 1)],
-    4 => [(0, -1)],
-    5 => [(1, -1)],
-    6 => [(-1, -1)],
-)
-
-
-
+#cell_types_sequence = [4,2,1]
+#max_div_sequence = [5, 10, 5, 5] 
+cell_types_sequence = [1, 2, 3, 1]
 
 
 
@@ -40,9 +16,9 @@ initial_cells = CellSetByCoordinates(Dict(
         Cell(
             (Int64(floor(grid_size[1] / 2)), Int64(floor(grid_size[2] / 2))),
             0,
-            cell_types_to_load[1],
-            cell_types_to_load[1],  # initial_cell_type
-            cell_types_to_load[1],
+            cell_types_sequence[1],
+            cell_types_sequence[1],  # initial_cell_type
+            cell_types_sequence[1],
             0,
             0, #initial_nbdiv
             true,
@@ -54,5 +30,5 @@ initial_cells = CellSetByCoordinates(Dict(
 
 
 # --- Lancement de la simulation ---
-run_simulation(initial_cells, num_steps, grid_size, max_cell_division, cell_types_to_load; xml_file)
+run_simulation(initial_cells, num_steps, grid_size, cell_types_sequence; xml_file)
 
