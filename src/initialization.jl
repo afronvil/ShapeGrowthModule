@@ -28,7 +28,7 @@ cases = Dict(
     5 => [(1, -1)], #Sud-Ouest
     6 => [(-1, -1)],#Nord-Ouest
     7 => [(1, 1)], #Sud-Est
-    8 => [(-1, 1)],#Nord-Est
+    8 => [(-1, 1)]#Nord-Est
 )
 
 
@@ -55,8 +55,6 @@ initial_cells = CellSetByCoordinates(Dict(
 
 
 
-# --- Lancement de la simulation ---
-run_simulation(initial_cells, num_steps, grid_size, cell_types_sequence; xml_file)
 
 
 
