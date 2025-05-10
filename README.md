@@ -20,7 +20,7 @@ Pkg.add("Plots")
 Pkg.add("ColorSchemes")
 Pkg.add("ColorTypes")
 Pkg.add("EzXML")
-
+```
 
 ## Project Structure
 The project contains the following files:
@@ -43,10 +43,14 @@ visualization_xml.jl: Manages XML-based visualization.
 3. Launch Julia:
 
 4. Load the main simulation script:
+```julia
 include("simulation.jl")
+```
 
-5. Run the simulation by calling the get_generated_form function:
- get_generated_form([1, 2, 3, 1], [5, 10, 5, 8])
+6. Run the simulation by calling the get_generated_form function:
+ ```julia
+get_generated_form([1, 2, 3, 1], [5, 10, 5, 8])
+```
 
 - The first argument is the sequence of cell types.
 - The second argument is the maximum number of divisions for each type.
