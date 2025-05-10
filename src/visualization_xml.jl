@@ -24,25 +24,10 @@ function create_color_matrix(cell_set::CellSetByCoordinates, grid_size::Tuple{In
             type_id = cell.cell_type
             color_matrix[x, y] = cell_data[type_id]["color"]
             push!(annotations, (coords[2], coords[1], Plots.text(string(cell.nbdiv), 8, :black, :center)))
-
         end
     end
 
     return color_matrix, annotations
-end
-
-
-"""
-# Retourne `Dict{Int64, Vector{Int64}}`: Un dictionnaire où les clés sont les types de cellules et 
-# les valeurs sont les vecteurs de directions de prolifération.
-"""
-
-function create_directions(cell_data::Dict{Int64, Dict{String, Any}})
-    directions = Dict{Int64, Vector{Int64}}()
-    for (cell_type, data) in cell_data
-        directions[cell_type] = data["directions"]
-    end
-    return directions
 end
 
 
@@ -61,7 +46,7 @@ function plot_cell_state(color_matrix::Matrix{RGB{Float64}}, step::Int64, annota
                 ylabel="Y",
                 aspect_ratio=:equal,
                 colorbar=false,
-                annotations=annotations
+                #annotations=annotations
                 )
     catch e
         error("Erreur lors de la création du graphique : $e")

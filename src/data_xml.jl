@@ -1,3 +1,5 @@
+
+
 using EzXML
 """
 Charge les couleurs des types de cellules à partir d'un fichier XML.
