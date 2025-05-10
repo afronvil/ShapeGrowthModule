@@ -4,9 +4,6 @@ using Plots
 include("struct_cell_env.jl")
 include("initialization.jl")
 
-# --- Initialisation et paramètres ---
-#cell_types_sequence = [4,2,1]
-
 
 
 

@@ -6,7 +6,7 @@ include("visualization_xml.jl")
 include("struct_cell_env.jl")
 # --- Initialisation et paramètres ---
 
-#cell_types_sequence = [1, 2, 3, 1]
+
 
 # --- Initialisation et paramètres ---
 
