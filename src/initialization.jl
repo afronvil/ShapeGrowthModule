@@ -25,10 +25,10 @@ cases = Dict(
     2 => [(-1, 0)], #Nord
     3 => [(0, 1)],  #Est
     4 => [(1, 0)],  #Sud
-    5 => [(1, -1)], #Sud-Ouest
-    6 => [(-1, -1)],#Nord-Ouest
-    7 => [(1, 1)], #Sud-Est
-    8 => [(-1, 1)],#Nord-Est
+    # 5 => [(1, -1)], #Sud-Ouest
+    # 6 => [(-1, -1)],#Nord-Ouest
+    # 7 => [(1, 1)], #Sud-Est
+    # 8 => [(-1, 1)],#Nord-Est
 )
 
 
