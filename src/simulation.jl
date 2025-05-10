@@ -51,8 +51,7 @@ function get_generated_form(cell_type_sequence::Vector{Int64},max_div_sequence::
         ))
 
     # Exécuter la simulation
-    #history, cell_data, step = run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence; xml_file = xml_file, max_div_sequence)
     run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence; xml_file = xml_file, max_div_sequence)
-    #visualize_cells(history, step, grid_size, cell_data)
+    
 end
 
