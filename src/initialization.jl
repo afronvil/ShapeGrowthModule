@@ -17,7 +17,7 @@ grid_size = (30, 30)
 #max_cell_division = 6
 
 
-max_div_sequence = [5, 10, 5, 8] 
+max_div_sequence = [4, 10, 6, 6] 
 cell_types_sequence = [1, 2, 3, 1]
 
 cases = Dict(
