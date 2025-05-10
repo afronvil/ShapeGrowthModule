@@ -42,8 +42,10 @@ function plot_cell_state(color_matrix::Matrix{RGB{Float64}}, step::Int64, annota
     try
         heatmap(color_matrix,
                 title="Étape $step",
-                xlabel="X",
-                ylabel="Y",
+                #xlabel="X",
+                #ylabel="Y",
+                xaxis=false,
+                yaxis=false,
                 aspect_ratio=:equal,
                 colorbar=false,
                 #annotations=annotations

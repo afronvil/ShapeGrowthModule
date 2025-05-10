@@ -300,7 +300,7 @@ end
 
 """Lance la simulation cellulaire."""
 
-function run_simulation(initial_cells::CellSetByCoordinates, num_steps::Int64, grid_size::Tuple{Int64, Int64},  cell_type_sequence::Vector{Int64}; xml_file::String = "cellTypesChange.xml",max_div_sequence)
+function run_simulation(initial_cells::CellSetByCoordinates, num_steps::Int64, grid_size::Tuple{Int64, Int64},  cell_type_sequence::Vector{Int64}; xml_file::String = "cellTypesChange.xml", max_div_sequence::Vector{Int64})
     history = [deepcopy(initial_cells)]
     current_cells = CellSetByCoordinates(Dict{Tuple{Int64, Int64}, Cell}())
     cell_data=load_cell_data(xml_file, cell_types_sequence)
@@ -314,17 +314,20 @@ function run_simulation(initial_cells::CellSetByCoordinates, num_steps::Int64, g
     step=1
     new_cells=deepcopy(initial_cells)
     
-    anim = @animate while  !(get_cell_coordinates(current_cells) == get_cell_coordinates(new_cells)) 
+    #anim = @animate 
+    while  !(get_cell_coordinates(current_cells) == get_cell_coordinates(new_cells)) 
     ##anim = @animate for step in 1:num_steps
         current_cells=deepcopy(new_cells)
-        visualize_cells(current_cells, step, grid_size, cell_data)
-        println(get_cell_coordinates(current_cells))
+        #visualize_cells(current_cells, step, grid_size, cell_data)
+        #println(get_cell_coordinates(current_cells))
         new_cells = simulate_step!(current_cells, proliferation_directions, cell_type_sequence, max_cell_divisions, grid_size)
-        println(get_cell_coordinates(new_cells))
+        #println(get_cell_coordinates(new_cells))
         push!(history, deepcopy(current_cells))
         step+=1
     end
-    gif(anim, "cellular_dynamics.gif", fps=1)
-    println("Simulation terminée (mise à jour après tous les types) et la visualisation a été sauvegardée.")
+    #gif(anim, "cellular_dynamics.gif", fps=1)
+    #println("Simulation terminée (mise à jour après tous les types) et la visualisation a été sauvegardée.")
+    visualize_cells(history[step], step, grid_size, cell_data)
 end
+
 

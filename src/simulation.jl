@@ -11,14 +11,15 @@ include("data_xml.jl")
 include("visualization_xml.jl")
 
 include("struct_cell_env.jl")
-
+#max_div_sequence = 6
 
 # # --- Lancement de la simulation ---
 
 #run_simulation(initial_cells, num_steps, grid_size, cell_types_sequence; xml_file)
-cell_types_sequence = [1, 2, 3, 1]
+cell_type_sequence = [1, 2, 3, 1]
+max_div_sequence = [5, 10, 5, 8] 
 
-function get_generated_form(cell_type_sequence::Vector{Int64})
+function get_generated_form(cell_type_sequence::Vector{Int64},max_div_sequence::Vector{Int64})
     xml_file = "cellTypes.xml"  # Vous devrez peut-être ajuster le nom du fichier XML
     num_steps = 25 # Nombre d'étapes de simulation
     grid_size = (30, 30) # Taille de la grille
@@ -50,6 +51,8 @@ function get_generated_form(cell_type_sequence::Vector{Int64})
         ))
 
     # Exécuter la simulation
-    history, cell_data, step = run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence, xml_file = xml_file)
+    #history, cell_data, step = run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence; xml_file = xml_file, max_div_sequence)
+    run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence; xml_file = xml_file, max_div_sequence)
     #visualize_cells(history, step, grid_size, cell_data)
 end
+
