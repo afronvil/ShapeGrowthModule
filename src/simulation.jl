@@ -19,7 +19,7 @@ include("struct_cell_env.jl")
 cell_type_sequence = [1, 2, 3, 1]
 max_div_sequence = [5, 10, 5, 8] 
 
-function get_generated_form(cell_type_sequence::Vector{Int64},max_div_sequence::Vector{Int64})
+function get_generated_form(cell_type_sequence::Vector{Int64};max_div_sequence::Vector{Int64}= Int64[])
     xml_file = "cellTypes.xml"  # Vous devrez peut-être ajuster le nom du fichier XML
     num_steps = 25 # Nombre d'étapes de simulation
     grid_size = (30, 30) # Taille de la grille
