@@ -53,7 +53,7 @@ get_generated_form([1, 2, 3, 1], [5, 10, 5, 8])
 ```
 or if you want to use the values of the xml file:
 ```julia
-get_generated_form([1, 2, 3, 1]
+get_generated_form([1, 2, 3, 1])
 ```
 
 - The first argument is the sequence of cell types.
