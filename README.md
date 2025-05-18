@@ -57,7 +57,7 @@ get_generated_form([1, 2, 3, 1])
 ```
 
 - The first argument is the sequence of cell types.
-- The second argument is the maximum number of divisions for each type.
+- The second argument is the maximum number of divisions for each type which is optinnal if you use the values of the xml file.
 
  6. View the results, which will be displayed as a heatmap.
 
