@@ -51,7 +51,45 @@ function get_generated_form(cell_type_sequence::Vector{Int64};max_div_sequence::
         ))
 
     # Exécuter la simulation
-    run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence; xml_file = xml_file, max_div_sequence)
+    run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence; xml_file = xml_file, max_div_sequence, toto=toto)
     
 end
 
+function get_generated_form(cell_type_sequence::Vector{Int64}, toto::Bool = false)
+    xml_file = "cellTypes.xml"
+    num_steps = 25
+    grid_size = (30, 30)
+    cases = Dict(
+        1 => [(0, -1)],
+        2 => [(-1, 0)],
+        3 => [(0, 1)],
+        4 => [(1, 0)],
+        5 => [(1, -1)],
+        6 => [(-1, -1)],
+        7 => [(1, 1)],
+        8 => [(-1, 1)]
+    )
+
+    initial_cells = CellSetByCoordinates(Dict(
+        (Int64(floor(grid_size[1] / 2)), Int64(floor(grid_size[2] / 2))) =>
+            Cell(
+                (Int64(floor(grid_size[1] / 2)), Int64(floor(grid_size[2] / 2))),
+                0,
+                cell_type_sequence[1],
+                cell_type_sequence[1],
+                cell_type_sequence[1],
+                0,
+                0,
+                true,
+                false,
+                1
+            )
+        )
+    )
+    # Correction : Initialiser max_div_sequence comme un Vector{Int64} vide
+    max_div_sequence = Int64[] # Initialiser avec le bon type
+    
+    # Exécuter la simulation
+    run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence; xml_file = xml_file, max_div_sequence = max_div_sequence, toto = toto)
+    
+end
