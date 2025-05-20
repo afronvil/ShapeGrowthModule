@@ -1,5 +1,6 @@
 using ColorSchemes
 using Plots
+
 # --- Fonctions de dynamique cellulaire ---
 
 """Tente de faire proliférer une cellule dans une direction donnée."""
@@ -7,11 +8,11 @@ function try_proliferate!(next_cells, parent_cell, dir, max_div, grid_size)
     #@debug "try_proliferate! : $(parent_cell.coordinates) dir : $dir cell_type : $(parent_cell.cell_type) last_division_type : $(parent_cell.last_division_type) nbdiv : $(parent_cell.nbdiv)"
     if parent_cell.is_alive && parent_cell.nbdiv < max_div && !parent_cell.has_proliferated_this_step
         new_coords = parent_cell.coordinates .+ dir
-        if checkbounds(Bool, zeros(Int64, grid_size...), new_coords...) && !haskey(next_cells, new_coords )
+        if checkbounds(Bool, zeros(Int64, grid_size...), new_coords...) && !haskey(next_cells, new_coords)
             parent_cell.last_division_type = parent_cell.cell_type
             parent_cell.nbdiv += 1
             next_index_in_sequence = parent_cell.current_type_index_in_sequence
-            new_cell = Cell(new_coords, 0, parent_cell.cell_type,parent_cell.cell_type, parent_cell.last_division_type, parent_cell.nbdiv,parent_cell.nbdiv, true, false, next_index_in_sequence )
+            new_cell = Cell(new_coords, 0, parent_cell.cell_type, parent_cell.cell_type, parent_cell.last_division_type, parent_cell.nbdiv, parent_cell.nbdiv, true, false, next_index_in_sequence)
             parent_cell.has_proliferated_this_step = true
             new_cell.has_proliferated_this_step = true
             next_cells[parent_cell.coordinates] = parent_cell
@@ -28,7 +29,7 @@ end
 
 """Tente de faire proliférer une cellule dans toutes les directions possibles pour son type."""
 function attempt_proliferation!(next_cells, current_cells, cell, directions, max_div, grid_size)
-    if cell.is_alive && !cell.has_proliferated_this_step && haskey(directions, cell.cell_type) 
+    if cell.is_alive && !cell.has_proliferated_this_step && haskey(directions, cell.cell_type)
         for dir in directions[cell.cell_type]
             if try_proliferate!(next_cells, deepcopy(cell), dir, max_div, grid_size) && cell.nbdiv < max_div
                 cell.has_proliferated_this_step = true
@@ -159,20 +160,19 @@ function reset_proliferation_status!(current_cells)
     end
 end
 
-"""
-Simule une étape de l'évolution cellulaire.
-"""
-function simulate_step!(
-    current_cells::CellSetByCoordinates, #simulation avec max_cell_divisions_dict
+
+"""Simule une étape de l'évolution cellulaire."""
+function simulate_step!(current_cells::CellSetByCoordinates, 
     proliferation_directions::Dict{Int64, Vector{Tuple{Int64, Int64}}}, 
-    cell_type_sequence::Vector{Int64},
-    grid_size::Tuple{Int64, Int64},
-    max_cell_divisions_dict::Dict{Int64, Int64}
-    )
+    cell_type_sequence::Vector{Int64}, 
+    max_cell_divisions_dict::Dict{Int64, Int64}, 
+    grid_size::Tuple{Int64, Int64})
+    #println("max_cell_divisions_dict1") #pour debug
     reset_proliferation_status!(current_cells)
     next_cells = deepcopy(current_cells.cells)
-        for cell_type in cell_type_sequence
-            cells_of_type = [cell for cell in values(current_cells.cells) if cell.is_alive && cell.cell_type == cell_type]
+    
+    for cell_type in cell_type_sequence
+        cells_of_type = [cell for cell in values(current_cells.cells) if cell.is_alive && cell.cell_type == cell_type]
 
         for cell in cells_of_type
             max_cell_division = max_cell_divisions_dict[cell.cell_type] # Get max_cell_division here
@@ -188,37 +188,68 @@ function simulate_step!(
     end
 
     update_cell_state!(next_cells)
+
     return CellSetByCoordinates(next_cells)
 end
 
 
-function simulate_step!(
-    current_cells::CellSetByCoordinates,         #simulation avec fonctions
+function simulate_step!(current_cells::CellSetByCoordinates, 
     proliferation_directions::Dict{Int64, Vector{Tuple{Int64, Int64}}}, 
     cell_type_sequence::Vector{Int64}, 
-    grid_size::Tuple{Int64, Int64},
-    max_cell_divisions_dict::Dict{Int64, Int64},
-    toto::Bool
-    )
+    max_div_sequence::Vector{Int64}, 
+    grid_size::Tuple{Int64, Int64};
+    xml_file::String = "cellTypes.xml",)
+    #println("max_div_sequence")   #pour debug
     reset_proliferation_status!(current_cells)
     next_cells = deepcopy(current_cells.cells)
     i = 1
-    for cell_type in cell_type_sequence 
-        #println("cell_type = ", cell_type)
+    for cell_type in cell_type_sequence
         cells_of_type = [cell for cell in values(current_cells.cells) if cell.is_alive && cell.cell_type == cell_type]
-        
-        
 
         for cell in cells_of_type
-            max_cell_division= calculate_max_divisions(cell)
-            #println("max_cell_division = ", max_cell_division)
+            max_cell_division = max_div_sequence[i]
             attempt_proliferation!(next_cells, current_cells, cell, proliferation_directions, max_cell_division, grid_size)
+        end
 
+        for cell in cells_of_type
+            max_cell_division = max_div_sequence[i]
+            if cell.is_alive && !cell.has_proliferated_this_step
+                try_differentiate!(next_cells, current_cells, cell_type_sequence, proliferation_directions, max_cell_division, grid_size, cell_type)
+            end
+        end
+        i += 1
+    end
+
+    update_cell_state!(next_cells)
+
+    return CellSetByCoordinates(next_cells)
+end
+
+function simulate_step!(current_cells::CellSetByCoordinates,         
+    proliferation_directions::Dict{Int64, Vector{Tuple{Int64, Int64}}}, 
+    cell_type_sequence::Vector{Int64}, 
+    grid_size::Tuple{Int64, Int64},
+    toto::Bool = false)
+    #println("max_cell_divisions_dict = ", max_cell_divisions_dict) #pour debug
+
+    reset_proliferation_status!(current_cells)
+    next_cells = deepcopy(current_cells.cells)
+    
+    i = 1
+    for cell_type in cell_type_sequence 
+        
+
+        cells_of_type = [cell for cell in values(current_cells.cells) if cell.is_alive && cell.cell_type == cell_type]
+
+        for cell in cells_of_type
+            max_cell_division = calculate_max_divisions(cell) # ici
+            attempt_proliferation!(next_cells, current_cells, cell, proliferation_directions, max_cell_division, grid_size)
+         
         end
         for cell in cells_of_type
-         
+            
             if cell.is_alive && !cell.has_proliferated_this_step
-                max_cell_division = calculate_max_divisions(cell)
+                max_cell_division = calculate_max_divisions(cell) #et ici
                 try_differentiate!(next_cells, current_cells, cell_type_sequence, proliferation_directions, max_cell_division, grid_size, cell_type)
             end
         end
@@ -245,13 +276,14 @@ function create_max_cell_divisions_dict(cell_data::Dict{Int64, Dict{String, Any}
     max_cell_divisions = Dict{Int64, Int64}() # Change Vector{Int64} to Int64
     for (cell_type, data) in cell_data
         max_cell_divisions[cell_type] = data["max_cell_division"] # Accède à la valeur
+        
     end
     return max_cell_divisions
 end
 
-function create_max_cell_divisions_dict(cell_type_sequence::Vector{Int64}, max_div_sequence::Vector{Int64})
+function create_max_cell_divisions_dict(cell_types_sequence::Vector{Int64}, max_div_sequence::Vector{Int64})
     # Vérifie si les séquences ont la même longueur. Si ce n'est pas le cas, cela peut entraîner des erreurs.
-    if length(cell_type_sequence) != length(max_div_sequence)
+    if length(cell_types_sequence) != length(max_div_sequence)
         throw(ArgumentError("Les séquences doivent avoir la même longueur."))
     end
 
@@ -259,9 +291,9 @@ function create_max_cell_divisions_dict(cell_type_sequence::Vector{Int64}, max_d
     max_cell_divisions = Dict{Int64, Int64}()
 
     # Itère sur les éléments des deux séquences en utilisant leurs indices.
-    for i in 1:length(cell_type_sequence)
-        # Associe le type de cellule (de cell_type_sequence) au nombre maximal de divisions (de max_div_sequence).
-        cell_type = cell_type_sequence[i]
+    for i in 1:length(cell_types_sequence)
+        # Associe le type de cellule (de cell_types_sequence) au nombre maximal de divisions (de max_div_sequence).
+        cell_type = cell_types_sequence[i]
         max_div = max_div_sequence[i]
         max_cell_divisions[cell_type] = max_div
     end
@@ -296,7 +328,6 @@ end
 """
 Récupère les coordonnées de toutes les cellules présentes dans un ensemble de cellules.
 """
-
 function get_cell_coordinates(cell_set::CellSetByCoordinates)
     return collect(keys(cell_set.cells))
 end
@@ -305,56 +336,47 @@ end
 Calcule le nombre maximal de divisions qu'une cellule peut effectuer,
 en fonction de ses coordonnées et de son type.
 """
-
 function calculate_max_divisions(cell::Cell)
-    # Dictionnaire associant les types de cellules à leurs fonctions de calcul de divisions
     return cell_type_to_max_divisions_function[cell.cell_type](cell)
 end
 
 """
 Lance la simulation cellulaire.
 """
-
-function run_simulation(initial_cells::CellSetByCoordinates, num_steps::Int64, grid_size::Tuple{Int64, Int64},  cell_type_sequence::Vector{Int64}; xml_file::String, max_div_sequence::Vector{Int64}, toto::Bool=false)
+function run_simulation(initial_cells::CellSetByCoordinates, num_steps::Int64, grid_size::Tuple{Int64, Int64},  cell_type_sequence::Vector{Int64}; xml_file::String = "cellTypes.xml", max_div_sequence::Vector{Int64}, toto::Bool=false)
     history = [deepcopy(initial_cells)]
     current_cells = CellSetByCoordinates(Dict{Tuple{Int64, Int64}, Cell}())
-    cell_data=load_cell_data(xml_file, cell_type_sequence)
-    if toto==true
+    cell_data = load_cell_data(xml_file, cell_type_sequence) # Charger les données des cellules
+    
+    # Déterminer le dictionnaire max_cell_divisions_dict
+    if toto
+        println("toto")
         max_cell_divisions_dict = create_max_cell_divisions_dict()
     elseif isempty(max_div_sequence)
-        max_cell_divisions_dict = create_max_cell_divisions_dict(cell_data)
+        println("tutu")
+        max_cell_divisions_dict = create_max_cell_divisions_dict(cell_data) # Utiliser cell_data
     else
+        println("titi")
         max_cell_divisions_dict = create_max_cell_divisions_dict(cell_type_sequence, max_div_sequence)
+        println("max_cell_divisions_dict = ", max_cell_divisions_dict)
     end
     
-    cell_directions = create_directions(cell_data)
+    cell_directions = create_directions(cell_data) # Utiliser cell_data
     proliferation_directions = create_directions_dict(cell_directions, cases)
-    step=1
-    new_cells=deepcopy(initial_cells)
-  
-    #anim = @animate 
-    # while  !(get_cell_coordinates(current_cells) == get_cell_coordinates(new_cells)) 
-    # ##anim = @animate for step in 1:num_steps
-    #     current_cells=deepcopy(new_cells)
-    #     new_cells = simulate_step!(current_cells, proliferation_directions, cell_type_sequence, max_cell_divisions_dict, grid_size)
-    #     push!(history, deepcopy(current_cells))
-    #     step+=1
-    # end
-  
-    while !(get_cell_coordinates(current_cells) == get_cell_coordinates(new_cells)) && step <= num_steps # Ajout d'une condition de sortie pour éviter les boucles infinies
+    step = 1
+    new_cells = initial_cells # Changement : pas de deepcopy ici
+    
+    while !(get_cell_coordinates(current_cells) == get_cell_coordinates(new_cells)) && step <= num_steps
         current_cells = new_cells
-        if toto==true
-            new_cells = simulate_step!(current_cells, proliferation_directions, cell_type_sequence, grid_size, max_cell_divisions_dict, toto)
-        else
-            new_cells = simulate_step!(current_cells, proliferation_directions, cell_type_sequence, grid_size, max_cell_divisions_dict)
-        end
-        push!(history, deepcopy(current_cells)) # On conserve deepcopy pour l'historique
+        new_cells = simulate_step!(current_cells, proliferation_directions, cell_type_sequence, grid_size; toto) # Passer toto
+        push!(history, deepcopy(current_cells))
         step += 1
     end
 
     #gif(anim, "cellular_dynamics.gif", fps=1)
     #println("Simulation terminée (mise à jour après tous les types) et la visualisation a été sauvegardée.")
-    visualize_cells(history[step], step, grid_size, cell_data)
+    #  visualize_cells(history[step], step, grid_size, cell_data) # La fonction visualize_cells n'est pas définie ici
+    return history
 end
 
 
@@ -370,8 +392,8 @@ function cellular_dynamics(current_cells::CellSetByCoordinates ,num_steps::Int64
         7 => [(1, 1)], #Sud-Est
         8 => [(-1, 1)]#Nord-Est
     )
-    new_cells = simulate_step!(current_cells, proliferation_directions, cell_type_sequence, max_cell_divisions, grid_size)
-
-
-end    
-
+    # Charger les données des cellules
+    cell_data = load_cell_data(xml_file, cell_type_sequence)  # Assurez-vous que cell_type_sequence est définie
+    proliferation_directions = create_directions_dict(create_directions(cell_data), cases)
+    new_cells = simulate_step!(current_cells, proliferation_directions, cell_type_sequence, max_cell_divisions, grid_size) # max_cell_divisions doit être défini avant
+end

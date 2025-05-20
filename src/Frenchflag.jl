@@ -14,5 +14,5 @@ include("initialization.jl")
 
 
 # --- Lancement de la simulation ---
-run_simulation(initial_cells, num_steps, grid_size, cell_types_sequence; xml_file,max_div_sequence)
+run_simulation(initial_cells, num_steps, grid_size, cell_types_sequence; xml_file, max_div_sequence)
 

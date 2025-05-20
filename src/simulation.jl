@@ -34,31 +34,13 @@ function get_generated_form(cell_type_sequence::Vector{Int64};max_div_sequence::
         8 => [(-1, 1)]#Nord-Est
     )
 
-    initial_cells = CellSetByCoordinates(Dict(
-        (Int64(floor(grid_size[1] / 2)), Int64(floor(grid_size[2] / 2))) =>
-            Cell(
-                (Int64(floor(grid_size[1] / 2)), Int64(floor(grid_size[2] / 2))),
-                0,
-                cell_type_sequence[1],
-                cell_type_sequence[1],  # initial_cell_type
-                cell_type_sequence[1],
-                0,
-                0, #initial_nbdiv
-                true,
-                false,
-                1     # current_type_index_in_sequence
-            )
-        ))
-
     # Exécuter la simulation
     run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence; xml_file = xml_file, max_div_sequence, toto=toto)
     
 end
 
 function get_generated_form(cell_type_sequence::Vector{Int64}, toto::Bool = false)
-    xml_file = "cellTypes.xml"
-    num_steps = 25
-    grid_size = (30, 30)
+    
     cases = Dict(
         1 => [(0, -1)],
         2 => [(-1, 0)],
@@ -71,9 +53,9 @@ function get_generated_form(cell_type_sequence::Vector{Int64}, toto::Bool = fals
     )
 
     initial_cells = CellSetByCoordinates(Dict(
-        (Int64(floor(grid_size[1] / 2)), Int64(floor(grid_size[2] / 2))) =>
+        (Int64(floor(3*grid_size[1] / 4)), Int64(floor(grid_size[2] / 2))) =>
             Cell(
-                (Int64(floor(grid_size[1] / 2)), Int64(floor(grid_size[2] / 2))),
+                (Int64(floor(3*grid_size[1] / 4)), Int64(floor(grid_size[2] / 2))),
                 0,
                 cell_type_sequence[1],
                 cell_type_sequence[1],
