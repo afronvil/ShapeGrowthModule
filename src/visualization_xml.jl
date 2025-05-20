@@ -19,7 +19,6 @@ function create_color_matrix(cell_set::CellSetByCoordinates, grid_size::Tuple{In
     annotations = []
     for (coords, cell) in cell_set.cells
         x, y = coords
-        
         if checkbounds(Bool, color_matrix, x, y)
             type_id = cell.cell_type
             color_matrix[x, y] = cell_data[type_id]["color"]
@@ -57,7 +56,7 @@ end
 
 """
 Fonction principale pour visualiser l'état des cellules.  Orchestre le chargement des couleurs,
-la création de  zla matrice de couleurs, et le traçage de la heatmap.
+la création de  la matrice de couleurs, et le traçage de la heatmap.
 """
 
 
@@ -65,6 +64,21 @@ function visualize_cells(cell_set::CellSetByCoordinates, step::Int64, grid_size:
     cell_data::Dict{Int64, Dict{String, Any}})
     color_matrix, annotations = create_color_matrix(cell_set, grid_size, cell_data) # Créer la matrice de couleurs
     plot_cell_state(color_matrix, step, annotations) # Afficher l'état
-    
+end
 
+
+
+function visualize_history(history::Vector{CellSetByCoordinates}, grid_size::Tuple{Int64, Int64}, 
+                        cell_data::Dict{Int64, Dict{String, Any}})
+    
+    
+    
+    # Créer une animation
+    anim = @animate for (step, cell_set) in enumerate(history)
+        color_matrix, annotations = create_color_matrix(cell_set, grid_size, cell_data) 
+        plot_cell_state(color_matrix, step, annotations)  
+    end
+
+    # Sauvegarder l'animation
+    gif(anim, "../data/cell_evolution.gif", fps=2)
 end
