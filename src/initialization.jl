@@ -1,28 +1,16 @@
-include("../src/functions.jl")
-include("../src/data_xml.jl")
-include("../src/visualization_xml.jl")
-include("../src/struct_cell_env.jl")
+using ShapeGrowthModels
 # --- Initialisation et paramètres ---
 
 #max_cell_division = 6
-xml_file = "../xml/cellTypes.xml"
+
 num_steps = 25
 grid_size = (100, 100)
-cell_data = load_cell_data(xml_file, cell_type_sequence)
-#max_div_sequence = [4, 10, 6, 6] 
-#cell_types_sequence = [1, 5, 2, 3, 2, 1]
-#cell_types_sequence = [4]
 
-cases = Dict(
-    1 => [(0, -1)], #Ouest
-    2 => [(-1, 0)], #Nord
-    3 => [(0, 1)],  #Est
-    4 => [(1, 0)],  #Sud
-    # 5 => [(1, -1)], #Sud-Ouest
-    # 6 => [(-1, -1)],#Nord-Ouest
-    # 7 => [(1, 1)], #Sud-Est
-    # 8 => [(-1, 1)],#Nord-Est
-)
+#max_div_sequence = [4, 10, 6, 6] 
+
+cell_type_sequence = [1, 2, 3, 1]
+cell_data = load_cell_data(xml_file, cell_type_sequence)
+
 
 # --- Initial cell configuration ---
 initial_cells = CellSetByCoordinates(Dict(
@@ -30,9 +18,9 @@ initial_cells = CellSetByCoordinates(Dict(
         Cell(
             (Int64(floor(grid_size[1] / 2)), Int64(floor(grid_size[2] / 2))),
             0,
-            cell_types_sequence[1],
-            cell_types_sequence[1],  # initial_cell_type
-            cell_types_sequence[1],
+            cell_type_sequence[1],
+            cell_type_sequence[1],  # initial_cell_type
+            cell_type_sequence[1],
             0,
             0, #initial_nbdiv
             true,
@@ -48,10 +36,7 @@ initial_cells = CellSetByCoordinates(Dict(
     return 60 # Exemple : Dépend de la division entière de x par 10
 end
 
-function calculate_max_divisions_type1(cell::Cell)::Int64
-    x, y = cell.coordinates
-    return round((x*y)/30) # Exemple : Dépend de la division entière de x par 10
-end
+
 
 function calculate_max_divisions_type2(cell::Cell)::Int64
     # Autre exemple : une logique différente basée sur les coordonnées.

@@ -80,5 +80,5 @@ function visualize_history(history::Vector{CellSetByCoordinates}, grid_size::Tup
     end
 
     # Sauvegarder l'animation
-    gif(anim, "../data/cell_evolution.gif", fps=2)
+    gif(anim, "cell_evolution.gif", fps=2)
 end

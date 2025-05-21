@@ -14,8 +14,8 @@ mutable struct Cell
     current_type_index_in_sequence::Union{Int64, Nothing} # Ajout de ce champ
 end
 
-Cell(coordinates, timer, cell_type, initial_cell_type, last_division_type, nbdiv, initial_nbdiv, is_alive, has_proliferated_this_step, current_type_index_in_sequence) =
-    Cell(coordinates, timer, cell_type, initial_cell_type, last_division_type, nbdiv, initial_nbdiv, is_alive, has_proliferated_this_step, current_type_index_in_sequence) # Initialisation alternative
+Cell( timer, cell_type, initial_cell_type, last_division_type, nbdiv, initial_nbdiv, is_alive, has_proliferated_this_step, current_type_index_in_sequence) =
+Cell( timer, cell_type, initial_cell_type, last_division_type, nbdiv, initial_nbdiv, is_alive, has_proliferated_this_step, current_type_index_in_sequence) # Initialisation alternative
 
 mutable struct CellSetByCoordinates
     cells::Dict{Tuple{Int64, Int64}, Cell}

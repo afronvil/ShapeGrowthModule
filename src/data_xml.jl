@@ -1,12 +1,25 @@
 
-
+using ShapeGrowthModels
+using ColorTypes
 using EzXML
+xml_file = "../xml/cellTypes.xml"
 """
 Charge les couleurs des types de cellules à partir d'un fichier XML.
 Gère les erreurs de lecture de fichier et de format des données.
 """
+cases = Dict(
+    1 => [(0, -1)], #Ouest
+    2 => [(-1, 0)], #Nord
+    3 => [(0, 1)],  #Est
+    4 => [(1, 0)],  #Sud
+    # 5 => [(1, -1)], #Sud-Ouest
+    # 6 => [(-1, -1)],#Nord-Ouest
+    # 7 => [(1, 1)], #Sud-Est
+    # 8 => [(-1, 1)],#Nord-Est
+)
 
-function load_cell_data(xml_file::String, cell_types::Vector{Int64})
+
+function load_cell_data(xml_file::String, cell_type_sequence::Vector{Int64})
     #cell_type_colors = Dict{Int64, RGB{Float64}}()
     cell_data = Dict{Int64, Dict{String, Any}}()
     
@@ -21,7 +34,7 @@ function load_cell_data(xml_file::String, cell_types::Vector{Int64})
             # Sélectionner les éléments 'cellType' à l'intérieur de chaque 'genome'
             for cell_type in findall("cellType", genome)
                 type_id = parse(Int64, cell_type["type"])
-                if type_id in cell_types
+                if type_id in cell_type_sequence
                     try
                         # Extraire les attributs de couleur
                         color0 = parse(Float64, cell_type["color0"]) # Convertir en Float64

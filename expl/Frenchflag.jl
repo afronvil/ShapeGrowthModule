@@ -1,16 +1,17 @@
+using ShapeGrowthModels
 
-using ColorSchemes
-using Plots
-
-
+xml_file = "../xml/cellTypes.xml"
 max_div_sequence = [4, 10, 6, 6] 
 cell_type_sequence = [1, 2, 3, 1]
 
-include("../src/struct_cell_env.jl")
-include("initialization.jl")
+num_steps = 25
+grid_size = (100, 100)
+# --- Chargement des données des cellules ---
+cell_data = ShapeGrowthModels.load_cell_data(xml_file, cell_type_sequence)
 
 
 # --- Lancement de la simulation ---
-history, step = run_simulation(initial_cells, num_steps, grid_size, cell_type_sequence; cell_data, max_div_sequence = max_div_sequence)
+history, step = ShapeGrowthModels.run_simulation(ShapeGrowthModels.initial_cells, num_steps, grid_size, cell_type_sequence; cell_data, max_div_sequence = max_div_sequence)
     
-visualize_cells(history[step], step, grid_size, cell_data)
+#ShapeGrowthModels.visualize_cells(history[step], step, grid_size, cell_data)
+ShapeGrowthModels.visualize_history(history, grid_size, cell_data)
