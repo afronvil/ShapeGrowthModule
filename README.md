@@ -55,9 +55,13 @@ or if you want to use the values of the xml file:
 ```julia
 get_generated_form([1, 2, 3, 1])
 ```
-
+or if you want to use the values of the xml file:
+```julia
+get_generated_form([1, 2, 3, 1], true)
+```
 - The first argument is the sequence of cell types.
-- The second argument is the maximum number of divisions for each type which is optinnal if you use the values of the xml file.
+- The second argument [5, 10, 5, 8] is the maximum number of divisions for each type which is optinnal if you use the values of the xml file.
+- If the second argument is "true", the maximum number of divisions is calculate using the functions defines in initialization.jl
 
  6. View the results, which will be displayed as a heatmap.
 

@@ -3,7 +3,7 @@
   <genome ID="0" nbType="134">
     <cellType type="0" color0="0" color1="0" color2="1" max_cell_division="6" dir0="0" dir1="0" dir2="0" dir3="0" dir4="0" dir5="0"/>
     <cellType type="1" color0="0" color1="0" color2="1" max_cell_division="6" dir0="1" dir1="0" dir2="0" dir3="0" dir4="0" dir5="0"/>
-    <cellType type="2" color0="1" color1="1" color2="1" max_cell_division="6" dir0="2" dir1="0" dir2="0" dir3="0" dir4="0" dir5="0"/>
+    <cellType type="2" color0="1" color1="1" color2="1" max_cell_division="6" dir0="2" dir1="4" dir2="0" dir3="0" dir4="0" dir5="0"/>
     <cellType type="3" color0="1" color1="0" color2="0" max_cell_division="6" dir0="3" dir1="0" dir2="0" dir3="0" dir4="0" dir5="0"/>
     <cellType type="4" color0="1" color1="1" color2="0" max_cell_division="6" dir0="7" dir1="0" dir2="0" dir3="0" dir4="0" dir5="0"/>
     <cellType type="5" color0="0" color1="1" color2="1" max_cell_division="6" dir0="1" dir1="2" dir2="3" dir3="4" dir4="7" dir5="0"/>
