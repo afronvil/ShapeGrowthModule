@@ -1,0 +1,20 @@
+name = "ShapeGrowthModels"
+uuid = "68f6642c-5aaf-4592-899e-2c12ee545508"
+authors = ["Alexandra Fronville <101345415+afronvil@users.noreply.github.com>"]
+version = "0.1.0"
+
+[deps]
+ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
+ColorTypes = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
+EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
+GLPK = "60bf3e95-4087-53dc-ae20-288a0d20c6a6"
+JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+
+[compat]
+ColorSchemes = "3.29.0"
+ColorTypes = "0.12.1"
+EzXML = "1.2.1"
+GLPK = "1.2.1"
+JuMP = "1.26.0"
+Plots = "1.40.13"

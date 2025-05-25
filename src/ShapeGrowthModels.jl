@@ -11,10 +11,19 @@ module ShapeGrowthModels
 # If initialization.jl depends on functions from data_xml.jl or types from struct_cell_env.jl,
 # those files must be included before initialization.jl.
 
-include("struct_cell_env.jl") # Include cell structures first if initialization depends on them
-include("data_xml.jl")        # Include data loading functions (like load_cell_data) before they are used
-include("initialization.jl")  # Now initialization.jl can safely call load_cell_data
+using EzXML
+using ColorSchemes
+using ColorTypes
+using Plots
+dirname(@__FILE__)
+# Define the path to the XML file
+xml_file = "cellTypes.xml"
 
+
+include("constants.jl")
+include("struct_cell_env.jl") # Include cell structures first if initialization depends on them
+
+include("data_xml.jl")        # Include data loading functions (like load_cell_data) before they are used
 include("functions.jl")       # General utility functions
 include("visualization_xml.jl") # Visualization functions
 
@@ -22,5 +31,27 @@ include("visualization_xml.jl") # Visualization functions
 # when someone uses `using ShapeGrowthModels`, you should export them here.
 # For example, if `initial_cells` or `load_cell_data` are meant to be public:
 # export initial_cells, load_cell_data
+
+
+    export Cell, CellSetByCoordinates, CellModel
+    export create_default_initial_cells, initial_cells_default
+    export run_simulation, cellular_dynamics
+    export reconfigure_model_with_sequence!, set_subdivision!
+    export visualize_cells # Si vous avez une fonction visualize_cells exportable
+    export load_cell_data
+    export get_generated_form
+    export visualize_history
+    export create_directions, create_directions_dict
+    export create_max_cell_divisions_dict
+    export set_type_sequence!
+    
+
+    
+
+
+
+
+
+
 
 end # module ShapeGrowthModels

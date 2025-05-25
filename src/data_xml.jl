@@ -1,26 +1,20 @@
 
-using ShapeGrowthModels
 using ColorTypes
 using EzXML
-xml_file = "../xml/cellTypes.xml"
 """
 Charge les couleurs des types de cellules à partir d'un fichier XML.
 Gère les erreurs de lecture de fichier et de format des données.
 """
-cases = Dict(
-    1 => [(0, -1)], #Ouest
-    2 => [(-1, 0)], #Nord
-    3 => [(0, 1)],  #Est
-    4 => [(1, 0)],  #Sud
-    # 5 => [(1, -1)], #Sud-Ouest
-    # 6 => [(-1, -1)],#Nord-Ouest
-    # 7 => [(1, 1)], #Sud-Est
-    # 8 => [(-1, 1)],#Nord-Est
-)
 
 
 function load_cell_data(xml_file::String, cell_type_sequence::Vector{Int64})
-    #cell_type_colors = Dict{Int64, RGB{Float64}}()
+    println("Chargement des données depuis : $xml_file")
+    current_file_dir = dirname(@__FILE__)
+    module_root_dir = joinpath(current_file_dir, "")
+    full_xml_path = joinpath(module_root_dir,  xml_file)
+    if !isfile(full_xml_path)
+        error("Fichier XML non trouvé: $full_xml_path. Veuillez vérifier le chemin et la structure du dossier 'xml'.")
+    end
     cell_data = Dict{Int64, Dict{String, Any}}()
     
     try
@@ -35,6 +29,8 @@ function load_cell_data(xml_file::String, cell_type_sequence::Vector{Int64})
             for cell_type in findall("cellType", genome)
                 type_id = parse(Int64, cell_type["type"])
                 if type_id in cell_type_sequence
+                     println("DEBUG LOAD_CELL_DATA: Type $type_id trouvé dans cell_type_sequence.") # AJOUTER CETTE LIGNE
+
                     try
                         # Extraire les attributs de couleur
                         color0 = parse(Float64, cell_type["color0"]) # Convertir en Float64
@@ -49,7 +45,7 @@ function load_cell_data(xml_file::String, cell_type_sequence::Vector{Int64})
                         end
                         
                         cell_data[type_id] = Dict("directions" => directions, "color" => RGB(color0, color1, color2), "max_cell_division" => max_cell_division)
-                        
+                        println("Type $type_id chargé avec les données : $(cell_data[type_id])")
                     catch e
                         @warn "Erreur lors de la lecture des attributs du nœud cellType pour le type $type_id:"
                         # Gérer l'erreur, par exemple, en utilisant une couleur et des directions par défaut
