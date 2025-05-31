@@ -90,7 +90,8 @@ Creates an animation of the cell evolution over multiple simulation steps.
 - `cell_data`: Dictionary mapping cell types to their properties (e.g., colors).
 """
 function visualize_history(history::Vector{CellSetByCoordinates}, grid_size::Tuple{Int64, Int64}, 
-                        cell_data::Dict{Int64, Dict{String, Any}})    
+                        cell_data::Dict{Int64, Dict{String, Any}},
+                        filename)    
     # Create an animation by iterating through the history of cell sets
     anim = @animate for (step, cell_set) in enumerate(history)
         # For each step, create the color matrix and plot the cell state
@@ -99,7 +100,8 @@ function visualize_history(history::Vector{CellSetByCoordinates}, grid_size::Tup
     end
 
     # Save the animation as a GIF file
-    gif(anim, "cell_evolution.gif", fps=2)
+    
+    gif(anim, filename, fps=2)
 end
 
 
@@ -109,7 +111,7 @@ end
 High-level function to trigger visualization of the entire simulation history stored in the model.
 Assumes `model` has a `history` field containing the vector of cell sets.
 """
-function visualize(model::ShapeGrowthModels.CellModel)
+function visualize(model::ShapeGrowthModels.CellModel,filename)
     # Call the visualize_history function using data from the model instance
-    ShapeGrowthModels.visualize_history(model.history, model.grid_size, model.cell_data)
+    ShapeGrowthModels.visualize_history(model.history, model.grid_size, model.cell_data, filename)
 end

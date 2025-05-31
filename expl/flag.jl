@@ -2,11 +2,11 @@ using ShapeGrowthModels # Ensure your module is correctly loaded
 
 # These functions must be defined BEFORE being passed to set_max_function!
 fct1(cell::ShapeGrowthModels.Cell) = 5#round(10 * sin(cell.coordinates[1])) + 5
-fct2(cell::ShapeGrowthModels.Cell) = round(5*sin(cell.coordinates[1])) + 5
-fct3(cell::ShapeGrowthModels.Cell) = 25 #round(10 * sin(cell.coordinates[1])) + 5
-fct4(cell::ShapeGrowthModels.Cell) = round( 5 * sin(cell.coordinates[1])) + 5
+fct2(cell::ShapeGrowthModels.Cell) = 5
+fct3(cell::ShapeGrowthModels.Cell) = 10
+fct4(cell::ShapeGrowthModels.Cell) = 5 # round( 5 * sin(cell.coordinates[1])) + 5
 fct5(cell::ShapeGrowthModels.Cell) = round(10 * cell.coordinates[1] * sin(cell.coordinates[1])) + 5
-
+num_steps = 50
 xml_file="../xml/cellTypes130.xml"
 cell_type_sequence=[2, 3, 4, 2]
 
@@ -43,4 +43,8 @@ ShapeGrowthModels.set_max_function!(model, 5, fct5)
 ShapeGrowthModels.run!(model)
 
 # Visualizing the results
-ShapeGrowthModels.visualize(model)
+script_name = splitext(basename(@__FILE__))[1]
+output_directory = "../expl/"
+filename = joinpath(output_directory, "$(script_name).gif")
+
+ShapeGrowthModels.visualize(model,filename)

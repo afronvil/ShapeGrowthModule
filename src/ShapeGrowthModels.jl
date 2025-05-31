@@ -20,10 +20,10 @@ dirname(@__FILE__)
 xml_file = "cellTypes.xml"
 
 
-include("constants.jl")
-include("struct_cell_env.jl") # Include cell structures first if initialization depends on them
 
-include("data_xml.jl")        # Include data loading functions (like load_cell_data) before they are used
+include("struct_cell_env.jl") # Include cell structures first if initialization depends on them
+include("data_xml.jl")  
+include("functions_max.jl")      # Include data loading functions (like load_cell_data) before they are used
 include("functions.jl")       # General utility functions
 include("visualization_xml.jl") # Visualization functions
 

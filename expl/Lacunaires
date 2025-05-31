@@ -1,0 +1,38 @@
+fct2(cell::ShapeGrowthModels.Cell) = 8 # Croissance initiale rapide
+fct3(cell::ShapeGrowthModels.Cell) = 0 # Pas de division pour créer des "trous"
+fct1(cell::ShapeGrowthModels.Cell) = 5
+fct4(cell::ShapeGrowthModels.Cell) = 5
+fct5(cell::ShapeGrowthModels.Cell) = 5
+
+num_steps = 100
+xml_file="../xml/cellTypes130.xml"
+cell_type_sequence=[2, 2, 2, 2, 2, 3, 3, 3, 2, 2, 2, 2, 2, 2] # Introduction du type 2 pour créer des lacunes
+
+# Initial cells - un groupe central plus large pour voir la structure se développer
+initial_cells_dict = Dict{Tuple{Int64, Int64}, ShapeGrowthModels.Cell}()
+first_type = cell_type_sequence[1]
+for i in -5:5, j in -5:5
+    coords = (50 + i, 50 + j)
+    initial_cells_dict[coords] = ShapeGrowthModels.Cell(coords, 0, first_type, first_type, 0, 0, 0, true, false, 1)
+end
+initial_cells = ShapeGrowthModels.CellSetByCoordinates(initial_cells_dict)
+
+# CellModel
+model = ShapeGrowthModels.CellModel(initial_cells; xml_file=xml_file, cell_type_sequence=cell_type_sequence)
+
+# Définition des fonctions de division maximale pour chaque type de cellule
+ShapeGrowthModels.set_max_function!(model, 1, fct1)
+ShapeGrowthModels.set_max_function!(model, 2, fct2)
+ShapeGrowthModels.set_max_function!(model, 3, fct3)
+ShapeGrowthModels.set_max_function!(model, 4, fct4)
+ShapeGrowthModels.set_max_function!(model, 5, fct5)
+
+# Exécution de la simulation
+ShapeGrowthModels.run!(model)
+
+# Visualisation des résultats
+script_name = splitext(basename(@__FILE__))[1]
+output_directory = "../expl/"
+filename = joinpath(output_directory, "lacunar_$(script_name).gif")
+
+ShapeGrowthModels.visualize(model,filename)
