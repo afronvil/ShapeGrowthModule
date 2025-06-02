@@ -29,7 +29,7 @@ function load_cell_data(xml_file::String, cell_type_sequence::Vector{Int64})
             for cell_type in findall("cellType", genome)
                 type_id = parse(Int64, cell_type["type"])
                 if type_id in cell_type_sequence
-                    #println("DEBUG LOAD_CELL_DATA: Type $type_id trouvé dans cell_type_sequence.") # AJOUTER CETTE LIGNE
+                     println("DEBUG LOAD_CELL_DATA: Type $type_id trouvé dans cell_type_sequence.") # AJOUTER CETTE LIGNE
 
                     try
                         # Extraire les attributs de couleur
@@ -45,7 +45,7 @@ function load_cell_data(xml_file::String, cell_type_sequence::Vector{Int64})
                         end
                         
                         cell_data[type_id] = Dict("directions" => directions, "color" => RGB(color0, color1, color2), "max_cell_division" => max_cell_division)
-                        #println("Type $type_id chargé avec les données : $(cell_data[type_id])")
+                        println("Type $type_id chargé avec les données : $(cell_data[type_id])")
                     catch e
                         @warn "Erreur lors de la lecture des attributs du nœud cellType pour le type $type_id:"
                         # Gérer l'erreur, par exemple, en utilisant une couleur et des directions par défaut

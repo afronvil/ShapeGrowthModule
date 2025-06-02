@@ -9,6 +9,7 @@ mutable struct Cell
     is_alive::Bool
     has_proliferated_this_step::Bool
     current_type_index_in_sequence::Union{Int64, Nothing}
+    
 end
 
 mutable struct CellSetByCoordinates
