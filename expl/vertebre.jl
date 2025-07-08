@@ -1,50 +1,77 @@
-using ShapeGrowthModels # Ensure your module is correctly loaded
+using Shape_Growth_Populate
 
-# These functions must be defined BEFORE being passed to set_max_function!
-fct1(cell::ShapeGrowthModels.Cell) = 5#round(10 * sin(cell.coordinates[1])) + 5
-fct2(cell::ShapeGrowthModels.Cell) = round(5*sin(cell.coordinates[1])) + 5
-fct3(cell::ShapeGrowthModels.Cell) = 30
-fct4(cell::ShapeGrowthModels.Cell) = round( 5 * sin(cell.coordinates[1])) + 5
-fct5(cell::ShapeGrowthModels.Cell) = round(10 * cell.coordinates[1] * sin(cell.coordinates[1])) + 5
+# --- CONFIGURATION DE LA DimENSION ---
+const Dim = 2 # Changez ceci à 2 pour 2D, à 3 pour 3D
+# ------------------------------------
 
-xml_file="../xml/cellTypes130.xml"
-cell_type_sequence=[2, 3, 4, 2]
+# Ces fonctions doivent être définies AVANT d'être passées à set_max_function!
+fct7(cell::Shape_Growth_Populate.Cell) = round(5*sin(cell.coordinates[1])) + 5
+fct8(cell::Shape_Growth_Populate.Cell) = 30
+fct9(cell::Shape_Growth_Populate.Cell) = round(5 * sin(cell.coordinates[1])) + 5
 
-# Load cell data *before* creating the model if the constructor doesn't handle it
-# or if you want to modify it before passing.
-# However, the CellModel constructor now loads cell_data internally.
-# So this line might be redundant if the constructor handles it correctly.
-# Let's keep it for now, but be aware it might be loading data twice.
-initial_cells = ShapeGrowthModels.create_default_initial_cells((50, 50), cell_type_sequence[1])
+xml_file="xml/cellTypes130.xml"
+cell_type_sequence=[7, 8, 9, 7]
+num_steps = 55
+#dist_cellule_fibroblast = 1000.0
 
-#cell_data = ShapeGrowthModels.load_cell_data(xml_file, cell_type_sequence)
+# --- GÉNÉRALISATION DE LA CRÉATION DES CELLULES ET DE LA TAILLE DE LA GRILLE ---
 
-# IMPORTANT: Pass xml_file and cell_type_sequence as keyword arguments
+# Définir la position d'origine des cellules initiales en fonction de la Dimension
+initial_cell_origin = if Dim == 2
+    (50, 50)
+elseif Dim == 3
+    (50, 50, 5)
+else
+    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
+end
 
-model = ShapeGrowthModels.CellModel(initial_cells; xml_file=xml_file, cell_type_sequence=cell_type_sequence)
 
-# If the CellModel constructor now loads cell_data, this line becomes redundant
-# and potentially overwrites what the constructor just loaded.
-# You might want to remove it if the constructor's load_cell_data is sufficient.
-# model.cell_data = cell_data
+# Définir la taille de la grille en fonction de la Dimension
+grid_size = if Dim == 2
+    (100, 100)
+elseif Dim == 3
+    (100, 100, 10)
+else
+    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
+end
 
-# Defining the max_divisions calculation functions for each cell type
-ShapeGrowthModels.set_max_function!(model, 1, fct1)
-ShapeGrowthModels.set_max_function!(model, 2, fct2)
-ShapeGrowthModels.set_max_function!(model, 3, fct3)
-ShapeGrowthModels.set_max_function!(model, 4, fct4)
-ShapeGrowthModels.set_max_function!(model, 5, fct5)
+my_initial_stromal_dict = nothing      
 
-# Defining the sequence of cell types (if needed for other parts of the model)
-# This is now redundant if cell_type_sequence is passed to the constructor and stored there.
-# ShapeGrowthModels.set_type_sequence!(model, cell_type_sequence)
+my_initial_cells_dict = Shape_Growth_Populate.create_default_initial_cells_dict(
+    Val(Dim), 
+    initial_cell_origin, 
+    cell_type_sequence[1])
 
-# Running the simulation
-ShapeGrowthModels.run!(model)
 
-# Visualizing the results
-script_name = splitext(basename(@__FILE__))[1]
-output_directory = "../expl/"
-filename = joinpath(output_directory, "$(script_name).gif")
+model = Shape_Growth_Populate.CellModel{Dim}(
+    initial_cells_dict = my_initial_cells_dict, # This should still be a CellSetByCoordinates
+    xml_file = xml_file,
+    cell_type_sequence = cell_type_sequence,
+    grid_size = grid_size,
+    initial_stromal_cells_dict = Dict{NTuple{Dim, Int64}, Shape_Growth_Populate.StromalCell{Dim}}()
+)
 
-ShapeGrowthModels.visualize(model,filename)
+
+# Définition des fonctions de calcul de max_divisions pour chaque type de cellule
+Shape_Growth_Populate.set_max_function!(model, 7, fct7)
+Shape_Growth_Populate.set_max_function!(model, 8, fct8)
+Shape_Growth_Populate.set_max_function!(model, 9, fct9)
+
+
+
+
+
+println("Démarrage de la simulation...")
+# Exécution de la simulation
+Shape_Growth_Populate.run!(model, num_steps=num_steps) # Nombre d'étapes augmenté pour une meilleure visibilité
+println("Simulation terminée.")
+
+
+# Visualisation des résultats
+Shape_Growth_Populate.visualization(model)
+
+
+
+
+
+

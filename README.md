@@ -1,82 +1,80 @@
-# Shape Growth Module
+Shape_Growth_Populate
 
-This project simulates the growth of shapes using cellular automata principles. It includes tools for initializing, simulating, and visualizing the growth process.
+Un module Julia pour la modélisation de la croissance et de la dynamique de forme de cellules. Ce projet permet de simuler la prolifération, la différenciation et les interactions spatiales de divers types cellulaires, offrant des outils pour l'initialisation, la simulation et la visualisation de ces processus complexes.
+Fonctionnalités principales
 
-## Prerequisites
+    Modélisation Cellulaire: Définition et gestion de structures cellulaires avec des propriétés telles que le type, la position, la couleur et le potentiel de division.
+    Gestion de l'Environnement: Représentation d'un environnement discret (grille 3D) pour les interactions cellulaires.
+    Chargement de Données: Lecture des configurations de types cellulaires et de leurs propriétés depuis des fichiers XML.
+    Simulation de Croissance: Implémentation de dynamiques cellulaires incluant la division et la différenciation selon des règles définies.
+    Visualisation 3D: Outils pour visualiser l'état des cellules à différentes étapes de la simulation, y compris des animations interactives.
 
-Before running the code, ensure you have the following installed:
+Structure du Projet
 
-- **Julia**: Download and install Julia from [https://julialang.org/downloads/](https://julialang.org/downloads/).
-- Required Julia packages:
-  - `Plots`
-  - `ColorSchemes`
-  - `ColorTypes`
-  - `EzXML`
+Le module ShapeGrowthModels est organisé comme suit :
 
-You can install these packages by running the following commands in the Julia REPL:
-```julia
-using Pkg
-Pkg.add("Plots")
-Pkg.add("ColorSchemes")
-Pkg.add("ColorTypes")
-Pkg.add("EzXML")
-```
+Shape_Growth_Populate/
+├── src/
+│   ├── ShapeGrowthModels.jl    # Module principal
+│   ├── struct_cell_env.jl      # Définition des structures Cell, CellModel, etc.
+│   ├── data_xml.jl             # Fonctions de lecture/écriture des fichiers XML (par ex., cellTypes.xml)
+│   ├── functions.jl            # Fonctions utilitaires générales
+│   ├── functions_max.jl        # Fonctions utilitaires spécifiques (si distinctes)
+│   ├── visualization_xml.jl    # Fonctions de visualisation basées sur XML (si applicable)
+│   ├── visualization_3D.jl     # Fonctions pour la visualisation 3D avec PlotlyJS
+│   └── capture_basin.jl        # Logique spécifique (par ex., pour l'analyse des bassins de capture)
+├── expl/
+│   └── flag.jl                 # Script d'exemple ou de lancement de simulation
+└── xml/
+    └── cellTypes130.xml        # Exemple de fichier de définition des types cellulaires
 
-## Project Structure
-The project contains the following files:
+Installation
 
-cellTypes.xml: Defines the types of cells and their properties.
-data_xml.jl: Handles data parsing and XML processing.
-Frenchflag.jl: Implements the French flag problem logic.
-functions.jl: Contains utility functions for the simulation.
-initialization.jl: Handles the initialization of the simulation environment.
-simulation.jl: Main script to run the simulation.
-struct_cell_env.jl: Defines the structure of cells and their environment.
-visualization.jl: Handles visualization of the simulation results.
-visualization_xml.jl: Manages XML-based visualization.
+Pour utiliser ce module, assurez-vous d'avoir Julia (version 1.6 ou supérieure recommandée) installé sur votre système.
 
-## How to Run
-1. Clone or download the repository to your local machine.
+    Cloner le dépôt (si c'est un dépôt Git) :
+    Bash
 
-2. Open a terminal and navigate to the project directory.
+git clone https://github.com/votre_utilisateur/Shape_Growth_Populate.git
+cd Shape_Growth_Populate
 
-3. Launch Julia:
+Si ce n'est pas un dépôt Git, naviguez simplement vers le dossier racine du projet.
 
-4. Load the main simulation script:
-```julia
-include("simulation.jl")
-```
+Lancer Julia et installer les dépendances :
+Dans le répertoire racine du projet (là où se trouve le dossier src), lancez Julia :
+Bash
 
-6. Run the simulation by calling the get_generated_form function:
- ```julia
-get_generated_form([1, 2, 3, 1], [5, 10, 5, 8])
-```
-or if you want to use the values of the xml file:
-```julia
-get_generated_form([1, 2, 3, 1])
-```
-or if you want to use the values of the xml file:
-```julia
-get_generated_form([1, 2, 3, 1], true)
-```
-- The first argument is the sequence of cell types.
-- The second argument [5, 10, 5, 8] is the maximum number of divisions for each type which is optinnal if you use the values of the xml file.
-- If the second argument is "true", the maximum number of divisions is calculate using the functions defines in initialization.jl
+julia
 
- 6. View the results, which will be displayed as a heatmap.
+Une fois dans le REPL Julia, activez l'environnement du projet et installez les dépendances :
+Julia
 
+    julia> using Pkg
+    julia> Pkg.activate(".") # Active l'environnement du projet actuel
+    julia> Pkg.instantiate() # Installe toutes les dépendances listées dans Project.toml
 
-## Customization
-You can modify the simulation parameters by editing the arguments passed to get_generated_form or by adjusting the configuration in cellTypes.xml.
+    (Assurez-vous qu'un fichier Project.toml existe et liste les dépendances comme EzXML, ColorSchemes, ColorTypes, Plots, Parameters, PlotlyJS, PlotlyBase).
 
-## Troubleshooting
-Ensure all required files are in the project directory.
-Verify that all dependencies are installed.
-Check the syntax and structure of cellTypes.xml if XML-related errors occur.
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+Utilisation
 
-## Acknowledgments
-This project was developed to explore shape growth using computational models.
+Voici un exemple basique de comment lancer une simulation et visualiser les résultats en utilisant le module.
 
+Le script d'exemple principal est expl/flag.jl. Vous pouvez le lancer depuis le REPL Julia :
+Julia
 
+julia> include("expl/flag.jl")
+
+Configuration des Types Cellulaires
+
+Les propriétés des types cellulaires (couleurs, divisions maximales, directions de croissance) sont définies dans des fichiers XML, comme xml/cellTypes130.xml. Vous pouvez modifier ces fichiers pour adapter le comportement de vos cellules simulées.
+Contributions
+
+Les contributions sont les bienvenues ! Veuillez ouvrir une issue ou soumettre une pull request si vous avez des suggestions ou des améliorations.
+Licence
+
+Ce projet est sous licence [MIT License].
+Contact
+
+Pour toute question ou commentaire, veuillez contacter [Alexandra Fronville alexandra.fronville@univ-brest.fr/ https://github.com/afronvil/Shape_Growth_Populate].
+
+J'espère que ce README vous sera utile ! N'hésitez pas à le modifier et à l'adapter davantage à vos besoins spécifiques.

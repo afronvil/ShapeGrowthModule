@@ -1,3 +1,4 @@
+# src/data_xml.jl
 
 using ColorTypes
 using EzXML
@@ -8,11 +9,7 @@ Gère les erreurs de lecture de fichier et de format des données.
 
 
 function load_cell_data(xml_file::String, cell_type_sequence::Vector{Int64})
-    println("Chargement des données depuis : $xml_file")
-    current_file_dir = dirname(@__FILE__)
-    module_root_dir = joinpath(current_file_dir, "")
-    full_xml_path = joinpath(module_root_dir,  xml_file)
-    if !isfile(full_xml_path)
+    if !isfile(xml_file)
         error("Fichier XML non trouvé: $full_xml_path. Veuillez vérifier le chemin et la structure du dossier 'xml'.")
     end
     cell_data = Dict{Int64, Dict{String, Any}}()

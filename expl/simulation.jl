@@ -1,46 +1,108 @@
-using ShapeGrowthModels # Ensure your module is correctly loaded
+# flag_moment_flag.jl
+using Shape_Growth_Populate
 
-# These functions must be defined BEFORE being passed to set_max_function!
-fct1(cell::ShapeGrowthModels.Cell) = 5#round(10 * sin(cell.coordinates[1])) + 5
-fct2(cell::ShapeGrowthModels.Cell) = round(5*sin(cell.coordinates[1])) + 5
-fct3(cell::ShapeGrowthModels.Cell) = 25 #round(10 * sin(cell.coordinates[1])) + 5
-fct4(cell::ShapeGrowthModels.Cell) = round( 5 * sin(cell.coordinates[1])) + 5
-fct5(cell::ShapeGrowthModels.Cell) = round(10 * cell.coordinates[1] * sin(cell.coordinates[1])) + 5
 
-xml_file="../xml/cellTypes130.xml"
-cell_type_sequence=[2, 3, 4, 2]
+# --- CONFIGURATION DE LA DimENSION ---
+const Dim = 2# Changez ceci à 2 pour 2D, à 3 pour 3D
+# ------------------------------------
 
-# Load cell data *before* creating the model if the constructor doesn't handle it
-# or if you want to modify it before passing.
-# However, the CellModel constructor now loads cell_data internally.
-# So this line might be redundant if the constructor handles it correctly.
-# Let's keep it for now, but be aware it might be loading data twice.
-initial_cells = ShapeGrowthModels.create_default_initial_cells((50, 50), cell_type_sequence[1])
+# ... (vos définitions de fct7, fct8, fct9, xml_file, cell_type_sequence, etc.) ...
+fct7(cell::Shape_Growth_Populate.Cell{Dim}) = 5
+fct8(cell::Shape_Growth_Populate.Cell{Dim}) = 15
+fct9(cell::Shape_Growth_Populate.Cell{Dim}) = 5
 
-#cell_data = ShapeGrowthModels.load_cell_data(xml_file, cell_type_sequence)
+xml_file="xml/cellTypes130.xml"
 
-# IMPORTANT: Pass xml_file and cell_type_sequence as keyword arguments
+function generate_and_sample(num_types::Int)
+    # Créer un vecteur d'entiers aléatoires pour les types de cellules
+    vecteur_aleatoire = rand(1:num_types, 10)
+    println("Vecteur aléatoire généré pour cell_type_sequence : ", vecteur_aleatoire)
+    return vecteur_aleatoire
+end
 
-model = ShapeGrowthModels.CellModel(initial_cells; xml_file=xml_file, cell_type_sequence=cell_type_sequence)
+# Choisir le nombre de types de cellules en fonction du nombre de fonctions générées
+num_cell_types = 10
+cell_type_sequence = generate_and_sample(num_cell_types)
 
-# If the CellModel constructor now loads cell_data, this line becomes redundant
-# and potentially overwrites what the constructor just loaded.
-# You might want to remove it if the constructor's load_cell_data is sufficient.
-# model.cell_data = cell_data
+#cell_type_sequence=[7, 8, 9, 7]
+num_steps_sim = 50
+dist_cellule_fibroblast = 1000.0
 
-# Defining the max_divisions calculation functions for each cell type
-ShapeGrowthModels.set_max_function!(model, 1, fct1)
-ShapeGrowthModels.set_max_function!(model, 2, fct2)
-ShapeGrowthModels.set_max_function!(model, 3, fct3)
-ShapeGrowthModels.set_max_function!(model, 4, fct4)
-ShapeGrowthModels.set_max_function!(model, 5, fct5)
 
-# Defining the sequence of cell types (if needed for other parts of the model)
-# This is now redundant if cell_type_sequence is passed to the constructor and stored there.
-# ShapeGrowthModels.set_type_sequence!(model, cell_type_sequence)
+initial_cell_origin = if Dim == 2
+    (50, 50)
+elseif Dim == 3
+    (50, 50, 5)
+else
+    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
+end
 
-# Running the simulation
-ShapeGrowthModels.run!(model)
+grid_size = if Dim == 2
+    (100, 100)
+elseif Dim == 3
+    (100, 100, 10)
+else
+    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
+end
 
-# Visualizing the results
-ShapeGrowthModels.visualize(model)
+my_initial_cells_dict = Shape_Growth_Populate.create_default_initial_cells_dict(
+    Val(Dim), 
+    initial_cell_origin, 
+    cell_type_sequence[1]
+)
+
+model = Shape_Growth_Populate.CellModel{Dim}(
+    initial_cells_dict = my_initial_cells_dict,
+    xml_file = xml_file, 
+    cell_type_sequence = cell_type_sequence,
+    grid_size = grid_size, 
+    initial_stromal_cells_dict = Dict{NTuple{Dim, Int64}, Shape_Growth_Populate.StromalCell{Dim}}()
+)
+
+Shape_Growth_Populate.set_max_function!(model, 7, fct7)
+Shape_Growth_Populate.set_max_function!(model, 8, fct8)
+Shape_Growth_Populate.set_max_function!(model, 9, fct9)
+
+println("Démarrage de la simulation...")
+Shape_Growth_Populate.run!(model, num_steps=num_steps_sim) 
+println("Simulation terminée.")
+
+# --- NOUVEAU : Calcul des moments spatiaux ---
+max_moment_degree = 2 # Définissez le degré maximal des moments à calculer (ex: 0, 1 ou 2)
+println("\nCalcul des moments spatiaux jusqu'au degré ", max_moment_degree, "...")
+spatial_moments = Shape_Growth_Populate.calculate_spatial_moments(model.history[end].cells, max_moment_degree)
+
+println("Moments spatiaux calculés (ordre alpha => valeur) :")
+for (alpha, moment_value) in sort(collect(spatial_moments), by=x->sum(x.first))
+    println("  Moment ", alpha, " : ", moment_value)
+end
+# ---------------------------------------------
+
+println("\n--- Calcul des moments spatiaux par type et par étape ---")
+max_moment_degree =4 # Définissez le degré maximal des moments à calculer
+
+for (step_idx, history_entry) in enumerate(model.history)
+    cells_at_step = history_entry.cells
+    println("\n=== Étape de simulation: $(step_idx-1) ===") # step_idx est 1-basé, la première étape est 0
+
+    # Moments pour toutes les cellules (type = ALL)
+    all_cells_moments = Shape_Growth_Populate.calculate_spatial_moments(cells_at_step, max_moment_degree)
+    println("  Moments pour TOUTES les cellules :")
+    for (alpha, moment_value) in sort(collect(all_cells_moments), by=x->sum(x.first))
+        println("    Moment ", alpha, " : ", moment_value)
+    end
+
+    # Moments pour chaque type de cellule spécifique
+    for cell_type_id in unique(model.cell_type_sequence) # Itérer sur les types de cellules pertinents
+        type_specific_moments = Shape_Growth_Populate.calculate_spatial_moments_type(cells_at_step, max_moment_degree; filter_cell_type=cell_type_id)
+        println("  Moments pour le type de cellule $(cell_type_id) :")
+        for (alpha, moment_value) in sort(collect(type_specific_moments), by=x->sum(x.first))
+            println("    Moment ", alpha, " : ", moment_value)
+        end
+    end
+end
+println("\n--- Fin du calcul des moments ---")
+
+# Visualisation des résultats
+Shape_Growth_Populate.visualization(model)
+println("Exécution du script terminée.")
