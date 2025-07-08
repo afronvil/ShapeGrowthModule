@@ -1,6 +1,6 @@
 Shape_Growth_Populate
 
-Un module Julia pour la modélisation de la croissance et de la dynamique de forme de cellules. Ce projet permet de simuler la prolifération, la différenciation et les interactions spatiales de divers types cellulaires, offrant des outils pour l'initialisation, la simulation et la visualisation de ces processus complexes.
+Un module Julia pour la modélisation de la croissance et de la dynamique de tissus de cellulaires. Ce projet permet de simuler la prolifération, la différenciation et les interactions spatiales de divers types cellulaires.
 Fonctionnalités principales
 
     Modélisation Cellulaire: Définition et gestion de structures cellulaires avec des propriétés telles que le type, la position, la couleur et le potentiel de division.
@@ -55,7 +55,7 @@ Julia
 
     (Assurez-vous qu'un fichier Project.toml existe et liste les dépendances comme EzXML, ColorSchemes, ColorTypes, Plots, Parameters, PlotlyJS, PlotlyBase).
 
-Utilisation
+Utilisation :
 
 Voici un exemple basique de comment lancer une simulation et visualiser les résultats en utilisant le module.
 
@@ -64,16 +64,23 @@ Julia
 
 julia> include("expl/flag.jl")
 
-Configuration des Types Cellulaires
+
+Configuration des Types Cellulaires :
 
 Les propriétés des types cellulaires (couleurs, divisions maximales, directions de croissance) sont définies dans des fichiers XML, comme xml/cellTypes130.xml. Vous pouvez modifier ces fichiers pour adapter le comportement de vos cellules simulées.
-Contributions
+
+
+Contributions : 
 
 Les contributions sont les bienvenues ! Veuillez ouvrir une issue ou soumettre une pull request si vous avez des suggestions ou des améliorations.
-Licence
+
+
+Licence :
 
 Ce projet est sous licence [MIT License].
-Contact
+
+
+Contact : 
 
 Pour toute question ou commentaire, veuillez contacter [Alexandra Fronville alexandra.fronville@univ-brest.fr/ https://github.com/afronvil/Shape_Growth_Populate].
 
