@@ -87,6 +87,8 @@ This project is licensed under the [MIT License].
 
 Contact: 
 
-If you have any questions or comments, please contact [Alexandra Fronville alexandra.fronville@univ-brest.fr/ https://github.com/afronvil/Shape_Growth_Populate].
+If you have any questions or comments, please contact : [Alexandra Fronville alexandra.fronville@univ-brest.fr/ 
+
+https://github.com/afronvil/Shape_Growth_Populate].
 
 I hope you find this README useful! Please feel free to modify it and adapt it further to your specific needs.
