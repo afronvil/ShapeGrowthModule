@@ -38,57 +38,55 @@ cd Shape_Growth_Populate
 
 If it's not a Git repository, simply navigate to the project's root folder.
 
-Lancer Julia et installer les dépendances :
+Launch Julia and install the :
 
 ```julia
 using Pkg
 Pkg.add("Plots")
+Pkg.add("Parameters")
+Pkg.add("PlotlyJS")
+Pkg.add("PlotlyBase")
 Pkg.add("ColorSchemes")
 Pkg.add("ColorTypes")
 Pkg.add("EzXML")
 ```
 
-Dans le répertoire racine du projet (là où se trouve le dossier src), lancez Julia :
-Bash
-
-julia
+In the project's root directory (where the src folder is located), launch Julia :
 
 Une fois dans le REPL Julia, activez l'environnement du projet et installez les dépendances :
-Julia
 
+```julia
     julia> using Pkg
-    julia> Pkg.activate(".") # Active l'environnement du projet actuel
-    julia> Pkg.instantiate() # Installe toutes les dépendances listées dans Project.toml
+    julia> Pkg.activate(".") # Activate the current project environment
+    julia> Pkg.instantiate() # Installs all dependencies listed in Project.toml
+```
 
-    (Assurez-vous qu'un fichier Project.toml existe et liste les dépendances comme EzXML, ColorSchemes, ColorTypes, Plots, Parameters, PlotlyJS, PlotlyBase).
+How to use :
 
-Utilisation :
+Here's a basic example of how to run a simulation and visualize the results using the module.
 
-Voici un exemple basique de comment lancer une simulation et visualiser les résultats en utilisant le module.
-
-Le script d'exemple principal est expl/flag.jl. Vous pouvez le lancer depuis le REPL Julia :
-Julia
-
+The main example script is expl/flag.jl. You can launch it from the Julia REPL:
+```Julia
 julia> include("expl/flag.jl")
+```
 
+Cell type configuration :
 
-Configuration des Types Cellulaires :
-
-Les propriétés des types cellulaires (couleurs, divisions maximales, directions de croissance) sont définies dans des fichiers XML, comme xml/cellTypes130.xml. Vous pouvez modifier ces fichiers pour adapter le comportement de vos cellules simulées.
+Cell type properties (colors, maximum divisions, growth directions) are defined in XML files, such as xml/cellTypes130.xml. You can modify these files to adapt the behavior of your simulated cells.
 
 
 Contributions : 
 
-Les contributions sont les bienvenues ! Veuillez ouvrir une issue ou soumettre une pull request si vous avez des suggestions ou des améliorations.
+Contributions are welcome! Please open an issue or submit a pull request if you have suggestions or improvements.
 
 
-Licence :
+License:
 
-Ce projet est sous licence [MIT License].
+This project is licensed under the [MIT License].
 
 
-Contact : 
+Contact: 
 
-Pour toute question ou commentaire, veuillez contacter [Alexandra Fronville alexandra.fronville@univ-brest.fr/ https://github.com/afronvil/Shape_Growth_Populate].
+If you have any questions or comments, please contact [Alexandra Fronville alexandra.fronville@univ-brest.fr/ https://github.com/afronvil/Shape_Growth_Populate].
 
-J'espère que ce README vous sera utile ! N'hésitez pas à le modifier et à l'adapter davantage à vos besoins spécifiques.
+I hope you find this README useful! Please feel free to modify it and adapt it further to your specific needs.
