@@ -1,4 +1,4 @@
-Shape_Growth_Populate
+ShapeGrowthModule
 
 Un module Julia pour la modélisation de la croissance et de la dynamique de forme de cellules. Ce projet permet de simuler la prolifération, la différenciation et les interactions spatiales de divers types cellulaires, offrant des outils pour l'initialisation, la simulation et la visualisation de ces processus complexes.
 Fonctionnalités principales
@@ -13,7 +13,7 @@ Structure du Projet
 
 Le module ShapeGrowthModels est organisé comme suit :
 
-Shape_Growth_Populate/
+ShapeGrowthModule/
 ├── src/
 │   ├── ShapeGrowthModels.jl    # Module principal
 │   ├── struct_cell_env.jl      # Définition des structures Cell, CellModel, etc.
@@ -35,8 +35,8 @@ Pour utiliser ce module, assurez-vous d'avoir Julia (version 1.6 ou supérieure 
     Cloner le dépôt (si c'est un dépôt Git) :
     Bash
 
-git clone https://github.com/votre_utilisateur/Shape_Growth_Populate.git
-cd Shape_Growth_Populate
+git clone https://github.com/votre_utilisateur/ShapeGrowthModule.git
+cd ShapeGrowthModule
 
 Si ce n'est pas un dépôt Git, naviguez simplement vers le dossier racine du projet.
 
@@ -75,6 +75,6 @@ Licence
 Ce projet est sous licence [MIT License].
 Contact
 
-Pour toute question ou commentaire, veuillez contacter [Alexandra Fronville alexandra.fronville@univ-brest.fr/ https://github.com/afronvil/Shape_Growth_Populate].
+Pour toute question ou commentaire, veuillez contacter [Alexandra Fronville alexandra.fronville@univ-brest.fr/ https://github.com/afronvil/ShapeGrowthModule].
 
 J'espère que ce README vous sera utile ! N'hésitez pas à le modifier et à l'adapter davantage à vos besoins spécifiques.

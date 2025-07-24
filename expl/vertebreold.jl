@@ -1,22 +1,18 @@
 using ShapeGrowthModule
-using Plots # S'assurer que Plots est chargé
 
 # --- CONFIGURATION DE LA DimENSION ---
 const Dim = 2 # Changez ceci à 2 pour 2D, à 3 pour 3D
 # ------------------------------------
 
 # Ces fonctions doivent être définies AVANT d'être passées à set_max_function!
-fct7(cell::ShapeGrowthModule.Cell) = round(15*sin(cell.coordinates[1])) + 5
-fct8(cell::ShapeGrowthModule.Cell) = 50
-fct9(cell::ShapeGrowthModule.Cell) = round( 15 * sin(cell.coordinates[1])) + 5
-fct128(cell::ShapeGrowthModule.Cell) = 50
-fct129(cell::ShapeGrowthModule.Cell) = 50
-fct130(cell::ShapeGrowthModule.Cell) = 50
-fct131(cell::ShapeGrowthModule.Cell) = 50
+fct7(cell::ShapeGrowthModule.Cell) = round(5*sin(cell.coordinates[1])) + 5
+fct8(cell::ShapeGrowthModule.Cell) = 30
+fct9(cell::ShapeGrowthModule.Cell) = round(5 * sin(cell.coordinates[1])) + 5
+
 xml_file="xml/cellTypes130.xml"
-cell_type_sequence=[128, 129]#,122,126]#7, 8, 9, 7]#128,
-num_steps = 20
-dist_cellule_fibroblast = 5.0
+cell_type_sequence=[7, 8, 9, 7]
+num_steps = 55
+#dist_cellule_fibroblast = 1000.0
 
 # --- GÉNÉRALISATION DE LA CRÉATION DES CELLULES ET DE LA TAILLE DE LA GRILLE ---
 
@@ -29,13 +25,6 @@ else
     error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
 end
 
-initial_stromal_cell_origin = if Dim == 2
-    (50, 50)
-elseif Dim == 3
-    (50, 50, 5)
-else
-    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
-end
 
 # Définir la taille de la grille en fonction de la Dimension
 grid_size = if Dim == 2
@@ -46,38 +35,29 @@ else
     error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
 end
 
-const DEFAULT_STROMAL_CELL_TYPE = 99 
+my_initial_stromal_dict = nothing      
 
 my_initial_cells_dict = ShapeGrowthModule.create_default_initial_cells_dict(
     Val(Dim), 
     initial_cell_origin, 
     cell_type_sequence[1])
 
-my_initial_stromal_dict = ShapeGrowthModule.create_default_initial_stromal_cells_dict(
-    Val(Dim),
-    initial_stromal_cell_origin,
-    cell_type_sequence[1]
-)
-
 
 model = ShapeGrowthModule.CellModel{Dim}(
     initial_cells_dict = my_initial_cells_dict, # This should still be a CellSetByCoordinates
-    initial_stromal_cells_dict = my_initial_stromal_dict,
     xml_file = xml_file,
     cell_type_sequence = cell_type_sequence,
-    grid_size = grid_size
+    grid_size = grid_size,
+    initial_stromal_cells_dict = Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}}()
 )
-
-
 
 
 # Définition des fonctions de calcul de max_divisions pour chaque type de cellule
 ShapeGrowthModule.set_max_function!(model, 7, fct7)
 ShapeGrowthModule.set_max_function!(model, 8, fct8)
 ShapeGrowthModule.set_max_function!(model, 9, fct9)
-ShapeGrowthModule.set_max_function!(model, 128, fct128)
-ShapeGrowthModule.set_max_function!(model, 129, fct129)
-ShapeGrowthModule.set_max_function!(model, 130, fct130)
+
+
 
 
 
@@ -89,8 +69,6 @@ println("Simulation terminée.")
 
 # Visualisation des résultats
 ShapeGrowthModule.visualization(model)
-println("Exécution du script terminée.")
-
 
 
 

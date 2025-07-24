@@ -72,13 +72,13 @@ function attempt_proliferation!(
         
         # Ensure model.stromal_cells is initialized as a Dict if it's currently nothing
         if isnothing(model.stromal_cells)
-            model.stromal_cells = Dict{NTuple{Dim, Int64}, Shape_Growth_Populate.StromalCell{Dim}}()
+            model.stromal_cells = Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}}()
         end
 
         # Create the new stromal cell
         # You might want to assign a specific stromal cell type (e.g., DEFAULT_STROMAL_CELL_TYPE)
         # instead of using cell.cell_type for the new stromal cell.
-        new_stromal_cell = Shape_Growth_Populate.StromalCell{Dim}(
+        new_stromal_cell = ShapeGrowthModule.StromalCell{Dim}(
                 cell.coordinates,
                 cell.timer,
                 cell.cell_type, # Consider using a fixed DEFAULT_STROMAL_CELL_TYPE here

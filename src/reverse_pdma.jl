@@ -97,7 +97,7 @@ end
 
         #differentiation!(next_cells, cell, model.cell_type_sequence[cell.current_type_index_in_sequence+1]) # Differenciate to next_index_in_sequence 
         try_differentiate!(model, next_cells, model.cells, model.cell_type_sequence, model.processed_proliferation_directions, max_div, model.grid_size, cell.cell_type)
-        new_stromal_cell = Shape_Growth_Populate.StromalCell{Dim}(
+        new_stromal_cell = ShapeGrowthModule.StromalCell{Dim}(
                 cell.coordinates,
                 cell.timer,
                 cell.cell_type,
@@ -175,13 +175,13 @@ function attempt_proliferation!(
         
         # Ensure model.stromal_cells is initialized as a Dict if it's currently nothing
         if isnothing(model.stromal_cells)
-            model.stromal_cells = Dict{NTuple{Dim, Int64}, Shape_Growth_Populate.StromalCell{Dim}}()
+            model.stromal_cells = Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}}()
         end
 
         # Create the new stromal cell
         # You might want to assign a specific stromal cell type (e.g., DEFAULT_STROMAL_CELL_TYPE)
         # instead of using cell.cell_type for the new stromal cell.
-        new_stromal_cell = Shape_Growth_Populate.StromalCell{Dim}(
+        new_stromal_cell = ShapeGrowthModule.StromalCell{Dim}(
                 cell.coordinates,
                 cell.timer,
                 cell.cell_type, # Consider using a fixed DEFAULT_STROMAL_CELL_TYPE here

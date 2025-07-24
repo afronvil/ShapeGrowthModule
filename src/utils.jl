@@ -1,4 +1,4 @@
-# ~/Nextcloud/Logiciels/Shape_Growth_Populate/src/utils.jl
+# ~/Nextcloud/Logiciels/ShapeGrowthModule/src/utils.jl
 
 # ... (vos fonctions utilitaires existantes) ...
 

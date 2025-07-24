@@ -1,4 +1,4 @@
-module Shape_Growth_Populate
+module ShapeGrowthModule
 
 # This module contains the implementation of various shape growth models
 # and their associated functions.
@@ -41,7 +41,7 @@ include("capture_basin.jl")
 
 #include("initialization.jl") # Initialization functions that depend on the above files
 # If you want to make specific functions or variables accessible directly
-# when someone uses `using Shape_Growth_Populate`, you should export them here.
+# when someone uses `using ShapeGrowthModule`, you should export them here.
 # For example, if `initial_cells` or `load_cell_data` are meant to be public:
 # export initial_cells, load_cell_data
 
@@ -67,4 +67,4 @@ include("capture_basin.jl")
     export calculate_spatial_moments # <<< NOUVEAU : Exporter la fonction de moments
 
 
-end # module Shape_Growth_Populate
+end # module ShapeGrowthModule

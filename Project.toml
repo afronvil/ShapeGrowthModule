@@ -1,4 +1,4 @@
-name = "Shape_Growth_Populate"
+name = "ShapeGrowthModule"
 uuid = "df30dabd-ce4f-4ef5-b90e-4bada1cf5706"
 authors = ["Alexandra Fronville <101345415+afronvil@users.noreply.github.com>"]
 version = "0.1.0"

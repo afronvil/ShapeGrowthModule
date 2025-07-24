@@ -20,11 +20,11 @@ Retourne le nombre de cellules éliminées en raison de cette contrainte.
 
 
 
-# Dans Shape_Growth_Populate/src/ShapeGrowthViable.jl (ou functions.jl si c'est là que vous le mettez)
+# Dans ShapeGrowthModule/src/ShapeGrowthViable.jl (ou functions.jl si c'est là que vous le mettez)
 
 function is_near_stromal_cell(
-    cell_to_check::Shape_Growth_Populate.Cell{Dim},
-    stromal_cells_dict::Dict{NTuple{Dim, Int64}, Shape_Growth_Populate.Cell{Dim}}
+    cell_to_check::ShapeGrowthModule.Cell{Dim},
+    stromal_cells_dict::Dict{NTuple{Dim, Int64}, ShapeGrowthModule.Cell{Dim}}
 ) where Dim
     
     # Si il n'y a pas de cellules stromales, aucune cellule ne peut être proche d'une stromale.
@@ -40,7 +40,7 @@ function is_near_stromal_cell(
         dist_sq = sum(abs2.(cell_coord .- stromal_coord))
         
         # Si une cellule stromale est à l'intérieur de la distance définie, retourner true immédiatement.
-        if dist_sq <= Shape_Growth_Populate.STROMAL_PROXIMITY_DISTANCE^2
+        if dist_sq <= ShapeGrowthModule.STROMAL_PROXIMITY_DISTANCE^2
             return true # <--- RETOURNEZ TRUE DÈS QU'UNE CELLULE PROCHE EST TROUVÉE
             break
         end

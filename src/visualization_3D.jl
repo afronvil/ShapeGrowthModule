@@ -1,18 +1,18 @@
-# ~/Nextcloud/Logiciels/Shape_Growth_Populate/src/visualization_3D.jl
+# ~/Nextcloud/Logiciels/ShapeGrowthModule/src/visualization_3D.jl
 
 using PlotlyJS 
 using ColorTypes # Nécessaire pour le type RGB
 
-import ..Shape_Growth_Populate 
+import ..ShapeGrowthModule 
 
 """
-    visualize_3D_cells(model::Shape_Growth_Populate.CellModel{3}, Dim::Int, cell_type_sequence::Vector{Int})
+    visualize_3D_cells(model::ShapeGrowthModule.CellModel{3}, Dim::Int, cell_type_sequence::Vector{Int})
 
 Génère une visualisation 3D interactive des cellules à partir du dernier état du modèle fourni
 en utilisant PlotlyJS, en utilisant les couleurs spécifiées dans le fichier XML du modèle.
 Les cellules sont représentées comme des points colorés.
 """
-function visualize_3D_cells(model::Shape_Growth_Populate.CellModel{3}, Dim::Int, cell_type_sequence::Vector{Int})
+function visualize_3D_cells(model::ShapeGrowthModule.CellModel{3}, Dim::Int, cell_type_sequence::Vector{Int})
     println("DEBUG: Début de la visualisation 3D de l'état final avec couleurs XML.")
 
     if Dim != 3
@@ -92,13 +92,13 @@ end
 
 
 """
-    visualize_history_3D_plotly_frames(model::Shape_Growth_Populate.CellModel{3}, output_dir::String)
+    visualize_history_3D_plotly_frames(model::ShapeGrowthModule.CellModel{3}, output_dir::String)
 
 Génère une série de fichiers HTML PlotlyJS, un pour chaque étape de l'historique 3D,
 en utilisant les couleurs spécifiées dans le fichier XML du modèle.
 Chaque fichier représente l'état des cellules à cette étape et est interactif.
 """
-function visualize_history_3D_plotly_frames(model::Shape_Growth_Populate.CellModel{3},Dim::Int, output_dir::String)
+function visualize_history_3D_plotly_frames(model::ShapeGrowthModule.CellModel{3},Dim::Int, output_dir::String)
     println("DEBUG: Début de la génération des frames 3D interactives de l'historique avec couleurs XML.")
 
     if Dim != 3

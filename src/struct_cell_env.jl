@@ -52,7 +52,7 @@ mutable struct CellModel{Dim}
     processed_migration_directions::Dict{Int64, Vector{NTuple{Dim, Int64}}}   # 12
     history::Vector{NamedTuple{
         (:cells, :stromal_cells),
-        Tuple{Dict{NTuple{Dim, Int64}, Cell{Dim}}, Dict{NTuple{Dim, Int64}, Shape_Growth_Populate.StromalCell{Dim}}}
+        Tuple{Dict{NTuple{Dim, Int64}, Cell{Dim}}, Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}}}
     }}   
 
     function CellModel{Dim}(;
@@ -124,7 +124,7 @@ end
 
 @with_kw mutable struct ExtraCellularMatrix{Dim}
     # stromal_cells will always be a Dict, even if empty, when part of ECM
-    stromal_cells::Dict{NTuple{Dim, Int64}, Shape_Growth_Populate.StromalCell{Dim}} = Dict{NTuple{Dim, Int64}, Shape_Growth_Populate.StromalCell{Dim}}()
+    stromal_cells::Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}} = Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}}()
     
     # Add other ECM components here as needed
     fractones::Dict{NTuple{Dim, Int64}, Any} = Dict{NTuple{Dim, Int64}, Any}() # Example
