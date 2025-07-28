@@ -13,78 +13,46 @@ Structure du Projet
 
 Le module ShapeGrowthModels est organisé comme suit :
 
-ShapeGrowthModule/
+Shape_Growth_Populate/
 ├── src/
-│   ├── ShapeGrowthModels.jl    # Module principal
-│   ├── struct_cell_env.jl      # Définition des structures Cell, CellModel, etc.
-│   ├── data_xml.jl             # Fonctions de lecture/écriture des fichiers XML (par ex., cellTypes.xml)
-│   ├── functions.jl            # Fonctions utilitaires générales
-│   ├── functions_max.jl        # Fonctions utilitaires spécifiques (si distinctes)
-│   ├── visualization_xml.jl    # Fonctions de visualisation basées sur XML (si applicable)
-│   ├── visualization_3D.jl     # Fonctions pour la visualisation 3D avec PlotlyJS
-│   └── capture_basin.jl        # Logique spécifique (par ex., pour l'analyse des bassins de capture)
+│     ├── ShapeGrowthModels.jl # Main module
+│     ├── struct_cell_env.jl # Definition of Cell, CellModel, etc. structures.
+│     ├── data_xml.jl # Functions for reading/writing XML files (eg, cellTypes.xml)
+│     ├── functions.jl # General utility functions
+│     ├── functions_max.jl # Specific utility functions (if distinct)
+│     ├── visualization_xml. jl # XML-based visualization functions (if applicable)
+│     ├── visualization_3D.jl # Functions for 3D visualization with PlotlyJS
+│     └── capture_basin.jl # Specific logic (eg, for catch basin analysis)
 ├── expl/
-│   └── flag.jl                 # Script d'exemple ou de lancement de simulation
+│     └── flag.jl # Example script or simulation run
 └── xml/
-    └── cellTypes130.xml        # Exemple de fichier de définition des types cellulaires
-
+     └── cellTypes130.xml # Example of cell type definition file
+```
 Installation
 
-Pour utiliser ce module, assurez-vous d'avoir Julia (version 1.6 ou supérieure recommandée) installé sur votre système.
+To use this module, make sure you have Julia (version 1.6 or higher recommended) installed on your system.
 
     Cloner le dépôt (si c'est un dépôt Git) :
     Bash
 
-git clone https://github.com/votre_utilisateur/ShapeGrowthModule.git
-cd ShapeGrowthModule
+git clone https://github.com/votre_utilisateur/Shape_Growth_Populate.git
+cd Shape_Growth_Populate
 
-Si ce n'est pas un dépôt Git, naviguez simplement vers le dossier racine du projet.
+If it's not a Git repository, simply navigate to the project's root folder.
 
-Lancer Julia et installer les dépendances :
-Dans le répertoire racine du projet (là où se trouve le dossier src), lancez Julia :
-Bash
+Launch Julia and install the :
 
-julia
+```julia
+using Pkg
+Pkg.add("Plots")
+Pkg.add("Parameters")
+Pkg.add("PlotlyJS")
+Pkg.add("PlotlyBase")
+Pkg.add("ColorSchemes")
+Pkg.add("ColorTypes")
+Pkg.add("EzXML")
+```
 
-Une fois dans le REPL Julia, activez l'environnement du projet et installez les dépendances :
-Julia
+In the project's root directory (where the src folder is located), launch Julia :
 
-    julia> using Pkg
-    julia> Pkg.activate(".") # Active l'environnement du projet actuel
-    julia> Pkg.instantiate() # Installe toutes les dépendances listées dans Project.toml
-
-    (Assurez-vous qu'un fichier Project.toml existe et liste les dépendances comme EzXML, ColorSchemes, ColorTypes, Plots, Parameters, PlotlyJS, PlotlyBase).
-
-Utilisation
-
-Dans le fichier $HOME/.julia/config/startup.jl, 
-mettre push!(LOAD_PATH, "/path/to/rep_containing_ShapeGrowthModule.jl/")
-
-Redémarrer Julia. (modifié) 
-
-puis dans Julia
-
-Julia
-using ShapeGrowthModule
-
-
-Voici un exemple basique de comment lancer une simulation et visualiser les résultats en utilisant le module.
-
-Le script d'exemple principal est expl/flag.jl. Vous pouvez le lancer depuis le REPL Julia :
-Julia
-julia> include("expl/flag.jl")
-
-Configuration des Types Cellulaires
-
-Les propriétés des types cellulaires (couleurs, divisions maximales, directions de croissance) sont définies dans des fichiers XML, comme xml/cellTypes130.xml. Vous pouvez modifier ces fichiers pour adapter le comportement de vos cellules simulées.
-Contributions
-
-Les contributions sont les bienvenues ! Veuillez ouvrir une issue ou soumettre une pull request si vous avez des suggestions ou des améliorations.
-Licence
-
-Ce projet est sous licence [MIT License].
-Contact
-
-Pour toute question ou commentaire, veuillez contacter [Alexandra Fronville alexandra.fronville@univ-brest.fr/ https://github.com/afronvil/ShapeGrowthModule].
-
-J'espère que ce README vous sera utile ! N'hésitez pas à le modifier et à l'adapter davantage à vos besoins spécifiques.
+I hope you find this README useful! Please feel free to modify it and adapt it further to your specific needs.
