@@ -44,8 +44,8 @@ end
 
 # Fonction pour générer automatiquement une fonction fct_i
 function generate_fct_fibonacci(i::Int)
-    return function(cell::ShapeGrowthModule.Cell)
-        return ShapeGrowthModule.fibonacci(i + 1) #+ 2
+    return function(cell::Cell)
+        return fibonacci(i + 1) #+ 2
     end
 end
 

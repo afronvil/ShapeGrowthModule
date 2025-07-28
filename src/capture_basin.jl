@@ -132,9 +132,9 @@ end
 # src/capture_basin.jl (inside compute_capture_basin)
 
 function compute_capture_basin(
-    model::ShapeGrowthModule.CellModel{Dim},
-    C_cells::Dict{NTuple{Dim, Int64}, ShapeGrowthModule.Cell{Dim}},
-    K_cells::Dict{NTuple{Dim, Int64}, ShapeGrowthModule.Cell{Dim}},
+    model::CellModel{Dim},
+    C_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}},
+    K_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}},
     cell_type_sequence::Vector{Int64}, # All relevant cell types for the simulation
     max_iterations::Int = 100
     ) where Dim

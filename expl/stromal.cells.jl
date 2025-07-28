@@ -6,13 +6,13 @@ const Dim = 2 # Changez ceci à 2 pour 2D, à 3 pour 3D
 # ------------------------------------
 
 # Ces fonctions doivent être définies AVANT d'être passées à set_max_function!
-fct7(cell::ShapeGrowthModule.Cell) = round(15*sin(cell.coordinates[1])) + 5
-fct8(cell::ShapeGrowthModule.Cell) = 50
-fct9(cell::ShapeGrowthModule.Cell) = round( 15 * sin(cell.coordinates[1])) + 5
-fct128(cell::ShapeGrowthModule.Cell) = 50
-fct129(cell::ShapeGrowthModule.Cell) = 50
-fct130(cell::ShapeGrowthModule.Cell) = 50
-fct131(cell::ShapeGrowthModule.Cell) = 50
+fct7(cell::Cell) = round(15*sin(cell.coordinates[1])) + 5
+fct8(cell::Cell) = 50
+fct9(cell::Cell) = round( 15 * sin(cell.coordinates[1])) + 5
+fct128(cell::Cell) = 50
+fct129(cell::Cell) = 50
+fct130(cell::Cell) = 50
+fct131(cell::Cell) = 50
 xml_file="xml/cellTypes130.xml"
 cell_type_sequence=[128, 129]#,122,126]#7, 8, 9, 7]#128,
 num_steps = 20
@@ -48,19 +48,19 @@ end
 
 const DEFAULT_STROMAL_CELL_TYPE = 99 
 
-my_initial_cells_dict = ShapeGrowthModule.create_default_initial_cells_dict(
+my_initial_cells_dict = create_default_initial_cells_dict(
     Val(Dim), 
     initial_cell_origin, 
     cell_type_sequence[1])
 
-my_initial_stromal_dict = ShapeGrowthModule.create_default_initial_stromal_cells_dict(
+my_initial_stromal_dict = create_default_initial_stromal_cells_dict(
     Val(Dim),
     initial_stromal_cell_origin,
     cell_type_sequence[1]
 )
 
 
-model = ShapeGrowthModule.CellModel{Dim}(
+model = CellModel{Dim}(
     initial_cells_dict = my_initial_cells_dict, # This should still be a CellSetByCoordinates
     initial_stromal_cells_dict = my_initial_stromal_dict,
     xml_file = xml_file,
@@ -72,23 +72,23 @@ model = ShapeGrowthModule.CellModel{Dim}(
 
 
 # Définition des fonctions de calcul de max_divisions pour chaque type de cellule
-ShapeGrowthModule.set_max_function!(model, 7, fct7)
-ShapeGrowthModule.set_max_function!(model, 8, fct8)
-ShapeGrowthModule.set_max_function!(model, 9, fct9)
-ShapeGrowthModule.set_max_function!(model, 128, fct128)
-ShapeGrowthModule.set_max_function!(model, 129, fct129)
-ShapeGrowthModule.set_max_function!(model, 130, fct130)
+set_max_function!(model, 7, fct7)
+set_max_function!(model, 8, fct8)
+set_max_function!(model, 9, fct9)
+set_max_function!(model, 128, fct128)
+set_max_function!(model, 129, fct129)
+set_max_function!(model, 130, fct130)
 
 
 
 println("Démarrage de la simulation...")
 # Exécution de la simulation
-ShapeGrowthModule.run!(model, num_steps=num_steps) # Nombre d'étapes augmenté pour une meilleure visibilité
+run!(model, num_steps=num_steps) # Nombre d'étapes augmenté pour une meilleure visibilité
 println("Simulation terminée.")
 
 
 # Visualisation des résultats
-ShapeGrowthModule.visualization(model)
+visualization(model)
 println("Exécution du script terminée.")
 
 

@@ -7,19 +7,19 @@ using ColorTypes # Nécessaire pour le type RGB
 import ..ShapeGrowthModule
 
 """
-    visualize_final_state_2D(model::ShapeGrowthModule.CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int)
+    visualize_final_state_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int)
 
 Génère une image 2D (heatmap) du dernier état des cellules sur la grille, en utilisant
 les couleurs spécifiées dans le fichier XML du modèle.
 Chaque cellule est visualisée comme un bloc de `block_size_rows` x `block_size_cols` pixels.
 
 # Arguments
-- `model::ShapeGrowthModule.CellModel{2}`: L'instance du modèle de simulation (doit être de Dim=2).
+- `model::CellModel{2}`: L'instance du modèle de simulation (doit être de Dim=2).
 - `output_filename::String`: Le chemin complet et le nom du fichier image à sauvegarder (ex: "output.png").
 - `block_size_rows::Int`: Le nombre de rangées de pixels que chaque cellule logique occupe.
 - `block_size_cols::Int`: Le nombre de colonnes de pixels que chaque cellule logique occupe.
 """
-function visualize_final_state_2D(model::ShapeGrowthModule.CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int)
+function visualize_final_state_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int)
     println("DEBUG: Début de la visualisation 2D de l'état final avec couleurs XML.")
 
     if isempty(model.history)
@@ -96,19 +96,19 @@ function visualize_final_state_2D(model::ShapeGrowthModule.CellModel{2}, output_
 end
 
 """
-    visualize_history_animation_2D(model::ShapeGrowthModule.CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int, fps::Int=10)
+    visualize_history_animation_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int, fps::Int=10)
 
 Génère une animation GIF de l'évolution des cellules 2D à travers l'historique de la simulation,
 en utilisant les couleurs spécifiées dans le fichier XML du modèle.
 
 # Arguments
-- `model::ShapeGrowthModule.CellModel{2}`: L'instance du modèle de simulation (doit être de Dim=2).
+- `model::CellModel{2}`: L'instance du modèle de simulation (doit être de Dim=2).
 - `output_filename::String`: Le chemin complet et le nom du fichier GIF à sauvegarder (ex: "animation.gif").
 - `block_size_rows::Int`: Le nombre de rangées de pixels que chaque cellule logique occupe.
 - `block_size_cols::Int`: Le nombre de colonnes de pixels que chaque cellule logique occupe.
 - `fps::Int`: Images par seconde pour l'animation.
 """
-function visualize_history_animation_2D(model::ShapeGrowthModule.CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int, fps::Int=10)
+function visualize_history_animation_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int, fps::Int=10)
     println("DEBUG: Début de la génération de l'animation 2D de l'historique avec couleurs XML.")
 
     if isempty(model.history)

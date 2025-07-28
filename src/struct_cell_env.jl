@@ -34,11 +34,12 @@ end
 mutable struct CellSetByCoordinates{Dim}
     cells::Dict{NTuple{Dim, Int64}, Cell{Dim}} # Clés et valeurs paramétrées
 end
+
 CellSetByCoordinates{Dim}() where Dim = CellSetByCoordinates(Dict{NTuple{Dim, Int64}, Cell{Dim}}())
 
 
 mutable struct CellModel{Dim}
-    xml_file::String                                        # 1
+    #xml_file::String                                        # 1
     cell_data::Dict{Int64, Dict{String, Any}}              # 2
     grid_size::NTuple{Dim, Int64}                           # 3
     cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}              # 4 (This is what initial_cells_dict becomes)
@@ -52,11 +53,12 @@ mutable struct CellModel{Dim}
     processed_migration_directions::Dict{Int64, Vector{NTuple{Dim, Int64}}}   # 12
     history::Vector{NamedTuple{
         (:cells, :stromal_cells),
-        Tuple{Dict{NTuple{Dim, Int64}, Cell{Dim}}, Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}}}
+        Tuple{Dict{NTuple{Dim, Int64}, Cell{Dim}}, Dict{NTuple{Dim, Int64}, StromalCell{Dim}}}
     }}   
 
     function CellModel{Dim}(;
-        xml_file::String = "",
+        #xml_file::String = "",
+        cell_data::Dict{Int64, Dict{String, Any}},   
         grid_size::NTuple{Dim, Int64} = (Dim == 2 ? (100, 100) : (100, 100, 10)),
         initial_cells_dict::Dict{NTuple{Dim, Int64}, Cell{Dim}}= Dict{NTuple{Dim, Int64}, Cell{Dim}}(),
         initial_stromal_cells_dict::Union{Dict{NTuple{Dim, Int64}, StromalCell{Dim}}, Nothing}=nothing,
@@ -65,7 +67,7 @@ mutable struct CellModel{Dim}
         cell_type_sequence::Vector{Int64}= Int64[],
 
     ) where Dim
-        cell_data = load_cell_data( xml_file, cell_type_sequence)
+        #cell_data = load_cell_data(xml_file, cell_type_sequence)
 
         processed_proliferation_directions = Dict{Int64, Vector{NTuple{Dim, Int64}}}()
         for (cell_type, data) in cell_data
@@ -104,7 +106,7 @@ mutable struct CellModel{Dim}
         push!(history_initial, (cells = deepcopy(initial_cells_dict), stromal_cells = final_history_stromal_cells))
 
 
-        new(xml_file, 
+        new(#xml_file, 
             cell_data, 
             grid_size, 
             initial_cells_dict, 
@@ -124,7 +126,7 @@ end
 
 @with_kw mutable struct ExtraCellularMatrix{Dim}
     # stromal_cells will always be a Dict, even if empty, when part of ECM
-    stromal_cells::Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}} = Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}}()
+    stromal_cells::Dict{NTuple{Dim, Int64}, StromalCell{Dim}} = Dict{NTuple{Dim, Int64}, StromalCell{Dim}}()
     
     # Add other ECM components here as needed
     fractones::Dict{NTuple{Dim, Int64}, Any} = Dict{NTuple{Dim, Int64}, Any}() # Example

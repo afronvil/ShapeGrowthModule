@@ -65,7 +65,7 @@ end
 
 # The run! function encapsulates the call to cellular_dynamics
 function run!(model::CellModel{Dim}; num_steps::Int64 = 50) where Dim
-    history_result, final_step = ShapeGrowthModule.cellular_dynamics(
+    history_result, final_step = cellular_dynamics(
         model,num_steps)
     model.history = history_result
     model.current_time = final_step
@@ -95,13 +95,13 @@ function cellular_dynamics(
 
     current_cells = deepcopy(model.cells)
     for step in 1:num_steps
-        new_cells = ShapeGrowthModule.simulate_step!(
+        new_cells = simulate_step!(
             model,
             current_cells
         )
         
         stromal_for_history = isnothing(model.stromal_cells) ? 
-                          Dict{NTuple{Dim, Int64}, ShapeGrowthModule.StromalCell{Dim}}() : 
+                          Dict{NTuple{Dim, Int64}, StromalCell{Dim}}() : 
                           deepcopy(model.stromal_cells)
 
         # CHANGE 3: Refer to the local `history` variable when pushing.
@@ -132,7 +132,7 @@ end
 
 function simulate_step!(
     model::CellModel{Dim},
-    current_cells::Dict{NTuple{Dim, Int64}, ShapeGrowthModule.Cell{Dim}}
+    current_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}
 ) where Dim
     println("\n--- Démarrage de l'étape ---")
     #println("initial_stromal_cells", model.stromal_cells)
@@ -156,7 +156,7 @@ function simulate_step!(
     
     # 1. Phase de Prolifération
     for cell_type in cell_type_sequence
-        cells_of_type_dict = Dict{NTuple{Dim, Int64}, ShapeGrowthModule.Cell{Dim}}(
+        cells_of_type_dict = Dict{NTuple{Dim, Int64}, Cell{Dim}}(
             coord => cell
             for (coord, cell) in current_cells
             if cell.is_alive && cell.cell_type == cell_type
@@ -222,7 +222,7 @@ function simulate_step!(
     end
 
     # 3. Mettre à jour les timers des cellules vivantes et construire le Dictionnaire final
-    final_next_cells_dict = Dict{NTuple{Dim, Int64}, ShapeGrowthModule.Cell{Dim}}()
+    final_next_cells_dict = Dict{NTuple{Dim, Int64}, Cell{Dim}}()
     for (coord, cell) in next_cells_dict
         if cell.is_alive
             cell.timer += 1
@@ -302,7 +302,7 @@ function create_default_initial_cells_dict(::Val{Dim}, initial_cell_origin::NTup
     
     # Correction : Appel au constructeur Cell{Dim} avec les 10 arguments corrects
     # et utilisation de initial_cell_origin au lieu de start_coords.
-    initial_cell = ShapeGrowthModule.Cell{Dim}(
+    initial_cell = Cell{Dim}(
         initial_cell_origin, # coordinates: NTuple{Dim, Int64}
         0, # timer: Int64 (ex: 0 au début)
         initial_type, # cell_type: Int64
@@ -320,7 +320,7 @@ end
 
 
 function create_default_initial_stromal_cells_dict(::Val{Dim}, initial_stromal_cell_origin::NTuple{Dim, Int64}, initial_stromal_type::Int64 ) where Dim
-    initial_stromal_cell = ShapeGrowthModule.StromalCell{Dim}(
+    initial_stromal_cell = StromalCell{Dim}(
         initial_stromal_cell_origin, # coordinates: NTuple{Dim, Int64}
         0, # timer: Int64 (ex: 0 au début)
         initial_stromal_type,
