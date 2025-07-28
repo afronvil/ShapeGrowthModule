@@ -70,7 +70,10 @@ function set_max_function!(model::CellModel, cell_type::Int, fct::Function)
     else
         error("The maximum division function for cell type $cell_type is already defined.")
     end
+    println("Maximum division function for cell type $cell_type set." , fct)
 end
+
+
 function set_max_function(model::CellModel, cell_type::Int)
     if haskey(model.max_cell_divisions_dict, cell_type)
         return model.max_cell_divisions_dict[cell_type]

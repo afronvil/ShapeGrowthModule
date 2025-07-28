@@ -53,10 +53,6 @@ model = CellModel{Dim}(
     initial_stromal_cells_dict = Dict{NTuple{Dim, Int64}, StromalCell{Dim}}()
 )
 
-
-
-
-
 # Définition des fonctions de calcul de max_divisions pour chaque type de cellule
 set_max_function!(model, 7, fct7)
 set_max_function!(model, 8, fct8)
@@ -64,7 +60,7 @@ set_max_function!(model, 9, fct9)
 
 println("Start simulation...")
 # Exécution de la simulation
-run!(model, num_steps=50) # Nombre d'étapes augmenté pour une meilleure visibilité
+run!(model, num_steps=num_steps) # Nombre d'étapes augmenté pour une meilleure visibilité
 println("Simulation complete.")
 
 
