@@ -1,18 +1,18 @@
-ShapeGrowthModule
+Shape_Growth_Populate
 
-Un module Julia pour la modélisation de la croissance et de la dynamique de forme de cellules. Ce projet permet de simuler la prolifération, la différenciation et les interactions spatiales de divers types cellulaires, offrant des outils pour l'initialisation, la simulation et la visualisation de ces processus complexes.
-Fonctionnalités principales
 
-    Modélisation Cellulaire: Définition et gestion de structures cellulaires avec des propriétés telles que le type, la position, la couleur et le potentiel de division.
-    Gestion de l'Environnement: Représentation d'un environnement discret (grille 3D) pour les interactions cellulaires.
-    Chargement de Données: Lecture des configurations de types cellulaires et de leurs propriétés depuis des fichiers XML.
-    Simulation de Croissance: Implémentation de dynamiques cellulaires incluant la division et la différenciation selon des règles définies.
-    Visualisation 3D: Outils pour visualiser l'état des cellules à différentes étapes de la simulation, y compris des animations interactives.
+This project simulates the growth of shapes using cellular automata principles. It includes tools for initializing, simulating, and visualizing the growth process.
 
-Structure du Projet
+Cell Modeling: Definition and management of cell structures with properties such as type, position, color and division potential.
+Environment Management: Representation of a discrete environment (3D grid) for cellular interactions.
+Data Loading: Read cell type configurations and properties from XML files.
+Growth simulation: Implementation of cell dynamics including division and differentiation according to defined rules.
+3D visualization: Tools for visualizing the state of cells at different stages of the simulation, including interactive animations.
 
-Le module ShapeGrowthModels est organisé comme suit :
+Project structure :
 
+The ShapeGrowthModels module is organized as follows:
+```
 Shape_Growth_Populate/
 ├── src/
 │     ├── ShapeGrowthModels.jl # Main module
@@ -32,9 +32,7 @@ Installation
 
 To use this module, make sure you have Julia (version 1.6 or higher recommended) installed on your system.
 
-    Cloner le dépôt (si c'est un dépôt Git) :
-    Bash
-
+Clone the repository (if it's a Git repository) :
 git clone https://github.com/votre_utilisateur/Shape_Growth_Populate.git
 cd Shape_Growth_Populate
 
@@ -54,5 +52,57 @@ Pkg.add("EzXML")
 ```
 
 In the project's root directory (where the src folder is located), launch Julia :
+
+Une fois dans le REPL Julia, activez l'environnement du projet et installez les dépendances :
+
+```julia
+    julia> using Pkg
+    julia> Pkg.activate(".") # Activate the current project environment
+    julia> Pkg.instantiate() # Installs all dependencies listed in Project.toml
+```
+
+How to use :
+
+In the file $HOME/.julia/config/startup.jl, 
+```
+push!(LOAD_PATH, "/path/to/rep_containing_ShapeGrowthModule.jl/")
+```
+Restart Julia (modified) 
+
+then in Julia
+
+```julia
+using ShapeGrowthModule
+```
+
+Here's a basic example of how to run a simulation and visualize the results using the module.
+
+The main example script is expl/flag.jl. You can launch it from the Julia REPL:
+```Julia
+julia> include("expl/flag.jl")
+```
+
+Cell type configuration :
+
+Cell type properties (colors, maximum divisions, growth directions) are defined in XML files, such as xml/cellTypes130.xml. You can modify these files to adapt the behavior of your simulated cells.
+
+
+Contributions : 
+
+Contributions are welcome! Please open an issue or submit a pull request if you have suggestions or improvements.
+
+
+License:
+
+This project is licensed under the [MIT License].
+
+
+Contact: 
+
+If you have any questions or comments, please contact : Alexandra Fronville 
+
+alexandra.fronville@univ-brest.fr/ 
+
+https://github.com/afronvil/Shape_Growth_Populate].
 
 I hope you find this README useful! Please feel free to modify it and adapt it further to your specific needs.
