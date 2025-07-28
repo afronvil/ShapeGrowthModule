@@ -139,7 +139,7 @@ end
 end
 
  for cell_type in cell_type_sequence
-        cells_of_type_dict = Dict{NTuple{Dim, Int64}, Shape_Growth_Populate.Cell{Dim}}(
+        cells_of_type_dict = Dict{NTuple{Dim, Int64}, Cell{Dim}}(
             coord => cell
             for (coord, cell) in current_cells
             if cell.is_alive && cell.cell_type == cell_type
@@ -159,7 +159,7 @@ function create_new_cell(
     current_type_index_in_sequence::Int64
 )::Cell{Dim} where Dim   
     # Assurez-vous d'importer `Cell` depuis votre module si cette fonction est définie ailleurs.
-    # Ex: Shape_Growth_Populate.Cell{Dim}
+    # Ex: Cell{Dim}
     return Cell{Dim}(
         coordinates=coordinates,
         timer=timer,

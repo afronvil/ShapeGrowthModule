@@ -12,7 +12,8 @@ function visualization(model::ShapeGrowthModule.CellModel{Dim}) where Dim
     else
         "simulation_script" 
     end
-    base_output_dir = "expl/"
+    
+    base_output_dir = "results/"
 
     specific_output_dir = joinpath(base_output_dir, script_name)
     output_dir_2D = joinpath(specific_output_dir, "2D")

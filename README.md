@@ -1,4 +1,4 @@
-Shape_Growth_Populate
+ShapeGrowthModule
 
 
 This project simulates the growth of shapes using cellular automata principles. It includes tools for initializing, simulating, and visualizing the growth process.
@@ -13,7 +13,7 @@ Project structure :
 
 The ShapeGrowthModels module is organized as follows:
 ```
-Shape_Growth_Populate/
+ShapeGrowthModule/
 ├── src/
 │     ├── ShapeGrowthModels.jl # Main module
 │     ├── struct_cell_env.jl # Definition of Cell, CellModel, etc. structures.
@@ -33,8 +33,8 @@ Installation
 To use this module, make sure you have Julia (version 1.6 or higher recommended) installed on your system.
 
 Clone the repository (if it's a Git repository) :
-git clone https://github.com/votre_utilisateur/Shape_Growth_Populate.git
-cd Shape_Growth_Populate
+git clone https://github.com/votre_utilisateur/ShapeGrowthModule.git
+cd ShapeGrowthModule
 
 If it's not a Git repository, simply navigate to the project's root folder.
 
@@ -103,6 +103,6 @@ If you have any questions or comments, please contact : Alexandra Fronville
 
 alexandra.fronville@univ-brest.fr/ 
 
-https://github.com/afronvil/Shape_Growth_Populate].
+https://github.com/afronvil/ShapeGrowthModule].
 
 I hope you find this README useful! Please feel free to modify it and adapt it further to your specific needs.
