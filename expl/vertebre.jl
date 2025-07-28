@@ -1,4 +1,5 @@
-using Shape_Growth_Populate
+using ShapeGrowthModel
+
 
 # --- CONFIGURATION DE LA DimENSION ---
 const Dim = 2 # Changez ceci à 2 pour 2D, à 3 pour 3D
