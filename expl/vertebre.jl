@@ -1,4 +1,4 @@
-using ShapeGrowthModel
+using ShapeGrowthModule
 
 
 # --- CONFIGURATION DE LA DimENSION ---
