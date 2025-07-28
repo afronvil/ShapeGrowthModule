@@ -70,5 +70,5 @@ println("Simulation complete.")
 
 # Visualisation des résultats
 
-open visualization(model)
+visualization(model)
 println("Script execution completed.")
