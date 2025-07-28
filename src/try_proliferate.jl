@@ -41,69 +41,68 @@ function try_proliferate!(
     for (cell_type, dirs) in model.processed_proliferation_directions
         union!(all_possible_directions, Set(dirs))
     end
-    #filter!(d -> any(d .!= 0), all_possible_directions) # Exclut la direction (0,0,0) si elle existe
     sorted_directions = collect(all_possible_directions) # Convertit en vecteur pour un ordre d'itération défini
 
-    # Boucle externe: Parcourir chaque direction possible
+    # External loop: Browse every possible direction
     for dir in sorted_directions
-        # Boucle interne: Parcourir chaque cellule existante au début de l'étape
+        # Internal loop: Scroll through each existing cell at the start of the step
         for coords in keys(current_cells)
             parent_cell = current_cells[coords] 
 
-            # Vérifie si la cellule est éligible pour proliférer et ne l'a pas déjà fait cette étape
+            # Checks if the cell is eligible to proliferate and has not already done so this step
             if parent_cell.is_alive && !(coords in already_proliferated_coords)
                 
-                # Obtenir les directions spécifiques à ce type de cellule
+                # Obtain specific directions for this type of cell
                 type_specific_directions = get(model.processed_proliferation_directions, parent_cell.cell_type, [ntuple(_ -> 0, Dim)])
                 
-                # Si la direction actuelle du loop est permise pour ce type de cellule
+                # If the current loop direction is permitted for this cell type
                 if dir in type_specific_directions
                     
                     new_coords = parent_cell.coordinates .+ dir # Calculer les nouvelles coordonnées
 
                     max_div = parent_cell.max_divisions # Utiliser la max_divisions de la cellule parente
 
-                    # Vérifier si la cellule parente peut encore se diviser et si la nouvelle position est valide et vide
+                    # Check whether the parent cell can still be divided and whether the new position is valid and empty.
                     if parent_cell.nbdiv < max_div && 
                        is_in_bounds(new_coords, model.grid_size, Val(Dim)) && 
                        !haskey(next_cells, new_coords) # Vérifier `next_cells` pour l'occupation!
                         
-                        # Prolifération réussie!
+                        # Successful proliferation!
                         update_after_proliferation!(parent_cell) # Mettre à jour l'état de la cellule parente
                         push!(already_proliferated_coords, coords) # Marquer cette cellule comme ayant proliféré
                         
-                        # Déterminer le type de la nouvelle cellule en fonction de la séquence
+                        # Determine the type of new cell based on the sequence
                         next_index_in_sequence = (parent_cell.current_type_index_in_sequence % length(model.cell_type_sequence)) + 1
                         new_cell_type = model.cell_type_sequence[next_index_in_sequence]
 
-                        # Obtenir max_divisions pour le nouveau type de cellule depuis model.cell_data
+                        # Get max_divisions for the new cell type from model.cell_data
                         new_cell_max_div = get(model.cell_data[new_cell_type], "max_cell_division", 0)
 
-                        # Créer la nouvelle cellule avec les arguments corrects
+                        # Create a new cell with the correct arguments
                         new_cell = create_new_cell(
                             new_coords, 
-                            0, # timer pour la nouvelle cellule
+                            0, # timer for the new cell
                             new_cell_type, 
-                            new_cell_type, # initial_cell_type pour la nouvelle cellule
-                            parent_cell.cell_type, # last_division_type est le type du parent
-                            0, # nbdiv pour la nouvelle cellule
-                            new_cell_max_div, # max_divisions pour la nouvelle cellule
+                            new_cell_type, # initial_cell_type for the new cell
+                            parent_cell.cell_type, # last_division_type is the type of the parent
+                            0, # nbdiv for the new cell
+                            new_cell_max_div, # max_divisions for the new cell
                             true, # is_alive
-                            false, # has_proliferated_this_step (pour la *prochaine* étape)
-                            next_index_in_sequence # current_type_index_in_sequence pour la nouvelle cellule
+                            false, # has_proliferated_this_step 
+                            next_index_in_sequence #current_type_index_in_sequence for the new cell
                         )
                         
-                        next_cells[new_coords] = new_cell # Ajouter la nouvelle cellule au dictionnaire
+                        next_cells[new_coords] = new_cell # Add the new cell to the dictionary
 
-                        # La logique du `break` pour cette cellule parente dans l'itération des directions
-                        # est gérée par `already_proliferated_coords`.
+                        # The break logic for this parent cell in the direction iteration
+                        # is managed by `already_proliferated_coords`.
                     end
                 end 
             end 
         end 
     end 
 
-    return next_cells # Renvoyer le dictionnaire mis à jour
+    return next_cells # Resend updated dictionary
 end
 
 
@@ -158,8 +157,7 @@ function create_new_cell(
     has_proliferated_this_step::Bool,
     current_type_index_in_sequence::Int64
 )::Cell{Dim} where Dim   
-    # Assurez-vous d'importer `Cell` depuis votre module si cette fonction est définie ailleurs.
-    # Ex: Cell{Dim}
+
     return Cell{Dim}(
         coordinates=coordinates,
         timer=timer,
@@ -174,9 +172,7 @@ function create_new_cell(
     )
 end
 
-
-# --- 4. Fonction update_after_proliferation! ---
-# Met à jour la cellule parente après une division.
+# Updates the parent cell after a division.
 
 function update_after_proliferation!(parent_cell::Cell{Dim}) where Dim
     parent_cell.nbdiv += 1

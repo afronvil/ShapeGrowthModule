@@ -2,7 +2,7 @@
 const STROMAL_PROXIMITY_MAX_DISTANCE = 2
 
 """
-Calcule la distance de Manhattan entre deux ensembles de coordonnées.
+Calculate the distance to Manhattan between two sets of coordinates.
 """
 function calculate_manhattan_distance(coords1::NTuple{Dim, Int64}, coords2::NTuple{Dim, Int64}) where Dim
     dist = 0
@@ -13,9 +13,9 @@ function calculate_manhattan_distance(coords1::NTuple{Dim, Int64}, coords2::NTup
 end
 
 """
-Vérifie la contrainte de proximité stromale : toute Cellule éloignée de plus de
-max_distance de toutes les StromalCells subira une apoptose.
-Retourne le nombre de cellules éliminées en raison de cette contrainte.
+Checks the stromal proximity constraint: any Cell more than
+max_distance away from all StromalCells will undergo apoptosis.
+Returns the number of cells eliminated as a result of this constraint.
 """
 
 
@@ -45,7 +45,4 @@ function is_near_stromal_cell(
             break
         end
     end
-
-    # Si la boucle se termine sans avoir retourné true, cela signifie qu'aucune cellule stromale proche n'a été trouvée.
-    #return false # <--- RETOURNEZ FALSE SEULEMENT APRÈS AVOIR TOUT VÉRIFIÉ
 end

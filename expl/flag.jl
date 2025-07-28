@@ -12,7 +12,7 @@ fct9(cell::Cell{Dim}) = 5
 xml_file_path = "xml/cellTypes130.xml"
 cell_type_sequence=[7, 8, 9, 7]
 num_steps = 10
-dist_cellule_fibroblast = 1000.0
+
 cell_data = load_cell_data(xml_file_path, cell_type_sequence)
 # --- GÉNÉRALISATION DE LA CRÉATION DES CELLULES ET DE LA TAILLE DE LA GRILLE ---
 
@@ -24,7 +24,7 @@ initial_cell_origin = if Dim == 2
 elseif Dim == 3
     (50, 50, 5)
 else
-    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
+    error("Unsupported dimension: $(Dim). Use 2 or 3.")
 end
 
 
@@ -34,7 +34,7 @@ grid_size = if Dim == 2
 elseif Dim == 3
     (100, 100, 10)
 else
-    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
+    error("Unsupported dimension: $(Dim). Use 2 or 3.")
 end
 
 
@@ -62,12 +62,13 @@ set_max_function!(model, 7, fct7)
 set_max_function!(model, 8, fct8)
 set_max_function!(model, 9, fct9)
 
-println("Démarrage de la simulation...")
+println("Start simulation...")
 # Exécution de la simulation
 run!(model, num_steps=50) # Nombre d'étapes augmenté pour une meilleure visibilité
-println("Simulation terminée.")
+println("Simulation complete.")
 
 
 # Visualisation des résultats
-visualization(model)
-println("Exécution du script terminée.")
+
+open visualization(model)
+println("Script execution completed.")

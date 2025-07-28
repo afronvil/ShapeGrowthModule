@@ -46,16 +46,16 @@ include("capture_basin.jl")
 # export initial_cells, load_cell_data
 
 
-    export Cell, CellSetByCoordinates, CellModel
+    export Cell, StromalCell, CellSetByCoordinates, CellModel
     export create_default_initial_cells_dict, initial_cells_dict_default
     export run_simulation, cellular_dynamics
     export reconfigure_model_with_sequence!, set_subdivision!
     export visualize_cells_dict # Si vous avez une fonction visualize_cells exportable
     export load_cell_data
-    export get_generated_form
+    export get_generated_form, generate_and_sample
     export visualize_history
     export create_directions, create_directions_dict
-    export load_cell_data, load_cell_all_data 
+    export load_cell_data
     export create_max_cell_divisions_dict
     export set_type_sequence!
     export run!, visualization, set_max_function!, set_type_sequence!

@@ -6,21 +6,21 @@ using ColorTypes # Nécessaire pour le type RGB
 import ..ShapeGrowthModule 
 
 """
-    visualize_3D_cells(model::CellModel{3}, Dim::Int, cell_type_sequence::Vector{Int})
+   visualize_3D_cells(model::CellModel{3}, Dim::Int, cell_type_sequence::Vector{Int})
 
-Génère une visualisation 3D interactive des cellules à partir du dernier état du modèle fourni
-en utilisant PlotlyJS, en utilisant les couleurs spécifiées dans le fichier XML du modèle.
-Les cellules sont représentées comme des points colorés.
+Generates an interactive 3D visualization of cells from the latest model state provided
+using PlotlyJS, using the colors specified in the model XML file.
+Cells are represented as colored points.
 """
 function visualize_3D_cells(model::CellModel{3}, Dim::Int, cell_type_sequence::Vector{Int})
-    println("DEBUG: Début de la visualisation 3D de l'état final avec couleurs XML.")
+    println("DEBUG: Start of 3D visualization of final state with XML colors.")
 
     if Dim != 3
-        @warn "Dim n'est pas égal à 3. La visualisation Scatter3D est optimisée pour Dim = 3. Actuellement Dim = $(Dim)."
+        @warn "Dim is not equal to 3. Scatter3D visualization is optimized for Dim = 3. Currently Dim = $(Dim)."
     end
 
     if isempty(model.history)
-        @warn "L'historique du modèle est vide. Impossible de visualiser les cellules 3D."
+        @warn "The model history is empty. 3D cells cannot be viewed."
         return
     end
     
@@ -51,7 +51,7 @@ function visualize_3D_cells(model::CellModel{3}, Dim::Int, cell_type_sequence::V
     end
 
     if isempty(cell_x)
-        @warn "Aucune cellule à visualiser dans le dernier état."
+        @warn "No cells to view in last state."
         return
     end
 
@@ -63,17 +63,13 @@ function visualize_3D_cells(model::CellModel{3}, Dim::Int, cell_type_sequence::V
         marker=PlotlyJS.attr(
             size=5,
             color=cell_colors_rgb_strings, # <<< Utiliser les chaînes de couleurs directes
-            # colorscale="Viridis", # N'est plus nécessaire
-            # cmin=isempty(cell_type_sequence) ? 0 : minimum(cell_type_sequence), # N'est plus nécessaire
-            # cmax=isempty(cell_type_sequence) ? 1 : maximum(cell_type_sequence), # N'est plus nécessaire
-            # colorbar_title="Cell Type", # N'est plus pertinent avec des couleurs directes non mappées
             opacity=0.8
         ),
-        name="Cellules"
+        name="Cells"
     )
 
     layout = PlotlyJS.Layout(
-        title="Répartition 3D des Cellules (Dernier état de la simulation)",
+        title="3D cell distribution (latest simulation status)",
         scene=PlotlyJS.attr(
             xaxis_title="X Coordinate",
             yaxis_title="Y Coordinate",
@@ -86,27 +82,26 @@ function visualize_3D_cells(model::CellModel{3}, Dim::Int, cell_type_sequence::V
     plot_obj = PlotlyJS.plot(trace, layout)
     PlotlyJS.display(plot_obj) 
 
-    println("DEBUG: Visualisation PlotlyJS Scatter3D générée pour les cellules 3D.")
+    println("DEBUG: PlotlyJS Scatter3D visualization generated for 3D cells.")
     return plot_obj 
 end
 
-
 """
-    visualize_history_3D_plotly_frames(model::CellModel{3}, output_dir::String)
+ visualize_history_3D_plotly_frames(model::CellModel{3}, output_dir::String)
 
-Génère une série de fichiers HTML PlotlyJS, un pour chaque étape de l'historique 3D,
-en utilisant les couleurs spécifiées dans le fichier XML du modèle.
-Chaque fichier représente l'état des cellules à cette étape et est interactif.
+Generates a series of PlotlyJS HTML files, one for each stage of the 3D history,
+using the colors specified in the model XML file.
+Each file represents the state of the cells at that stage and is interactive.
 """
 function visualize_history_3D_plotly_frames(model::CellModel{3},Dim::Int, output_dir::String)
-    println("DEBUG: Début de la génération des frames 3D interactives de l'historique avec couleurs XML.")
+    println("DEBUG: Start of generation of interactive 3D history frames with XML colors.")
 
     if Dim != 3
-        @warn "Cette fonction est optimisée pour Dim = 3. Actuellement Dim = $(Dim)."
+        @warn "This function is optimized for Dim = 3. Currently Dim = $(Dim)."
     end
 
     if isempty(model.history)
-        @warn "L'historique du modèle est vide. Impossible de générer des frames 3D."
+        @warn "The model history is empty. Unable to generate 3D frames."
         return
     end
 
@@ -114,7 +109,7 @@ function visualize_history_3D_plotly_frames(model::CellModel{3},Dim::Int, output
         mkpath(output_dir) 
     end
 
-    # Déterminer les limites maximales de la grille pour les axes 3D (pour la consistance)
+    # Set maximum grid limits for 3D axes
     max_x = model.grid_size[1]
     max_y = model.grid_size[2]
     max_z = Dim >= 3 ? model.grid_size[3] : 1
@@ -147,7 +142,7 @@ function visualize_history_3D_plotly_frames(model::CellModel{3},Dim::Int, output
         end
 
         if isempty(cell_x)
-            @warn "Aucune cellule à visualiser à l'étape $(step_idx-1). Création d'un plot vide."
+            @warn "No cells to be displayed at step $(step_idx-1). Creation of an empty plot."
             trace = PlotlyJS.scatter3d() # Créer un trace vide pour les étapes sans cellules
         else
             trace = PlotlyJS.scatter3d(
@@ -167,7 +162,7 @@ function visualize_history_3D_plotly_frames(model::CellModel{3},Dim::Int, output
         end
         
         layout = PlotlyJS.Layout(
-            title="Étape $(step_idx-1) de la simulation",
+            title="Simulation step $(step_idx-1)",
             scene=PlotlyJS.attr(
                 xaxis_title="X Coordinate",
                 yaxis_title="Y Coordinate",
@@ -184,8 +179,8 @@ function visualize_history_3D_plotly_frames(model::CellModel{3},Dim::Int, output
         
         output_filepath = joinpath(output_dir, "step_$(lpad(step_idx-1, 3, '0')).html")
         PlotlyJS.savefig(plot_obj, output_filepath)
-        println("DEBUG: Frame 3D pour l'étape $(step_idx-1) sauvegardée en : $output_filepath")
+        println("DEBUG: 3D frame for step $(step_idx-1) saved in : $output_filepath")
     end
-    println("DEBUG: Génération des frames 3D de l'historique terminée.")
+    println("DEBUG: Generation of 3D history frames completed.")
 end
 

@@ -88,10 +88,10 @@ function cellular_dynamics(
     cell_directions = create_directions(cell_data)
     proliferation_directions = create_directions_dict(cell_directions, Val(Dim))
 
-    println("--- Démarrage de la simulation de dynamique cellulaire ---")
-    println("Nombre initial de cellules : ", length(model.cells))
-    println("Nombre maximum d'étapes : ", num_steps)
-    println("Dimension de la grille : ", Dim, "D")
+    println("--- Starting the cell dynamics simulation ---")
+    println("Starting the cell dynamics simulation : ", length(model.cells))
+    println("Maximum number of stages: ", num_steps)
+    println("Grid dimensions : ", Dim, "D")
 
     current_cells = deepcopy(model.cells)
     for step in 1:num_steps
@@ -134,7 +134,7 @@ function simulate_step!(
     model::CellModel{Dim},
     current_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}
 ) where Dim
-    println("\n--- Démarrage de l'étape ---")
+    #println("\n--- Démarrage de l'étape ---")
     #println("initial_stromal_cells", model.stromal_cells)
     reset_proliferation_status!(current_cells)
     cell_type_sequence = model.cell_type_sequence
@@ -210,7 +210,7 @@ function simulate_step!(
                         cell_type_sequence,
                         processed_tuple_directions,          # 4th arg: proliferation_directions (Dict{Int64, Vector{NTuple{Dim, Int64}}})
                         max_cell_division_for_diff_val,      # 5th arg: max_cell_division (Float64 from Real)
-                        grid_size,                          # 6th arg: grid_size (NTuple{Dim, Int64})
+                        grid_size,                           # 6th arg: grid_size (NTuple{Dim, Int64})
                         cell_type                            # 7th arg: cell_type_to_process (Int64)
                     )
                         cells_differentiated_this_step += 1
@@ -230,11 +230,10 @@ function simulate_step!(
         end
     end
 
-    println("  -> Proliféré: ", cells_proliferated_this_step,
-            ", Mortes: ", cells_died_this_step,
-            ", Différenciées: ", cells_differentiated_this_step,
-            ", Converties en Stromales: ", cells_converted_to_stromal)
-
+  #=   println("  -> Proliferated: ", cells_proliferated_this_step,
+ ", Dead: ", cells_died_this_step,
+ ", Differentiated: ", cells_differentiated_this_step,
+ ", Converted to Stromal: ", cells_converted_to_stromal) =#
     return final_next_cells_dict
 end
 

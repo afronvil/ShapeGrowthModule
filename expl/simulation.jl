@@ -1,26 +1,18 @@
-# flag_moment_flag.jl
+# simulation.jl
 using ShapeGrowthModule
 
-
-# --- CONFIGURATION DE LA DimENSION ---
-const Dim = 2# Changez ceci à 2 pour 2D, à 3 pour 3D
+# --- DIMENSION CONFIGURATION ---
+const Dim = 2# Change this to 2 for 2D, 3 for 3D
 # ------------------------------------
 
-# ... (vos définitions de fct7, fct8, fct9, xml_file, cell_type_sequence, etc.) ...
 fct7(cell::Cell{Dim}) = 5
 fct8(cell::Cell{Dim}) = 15
 fct9(cell::Cell{Dim}) = 5
 
 xml_file="xml/cellTypes130.xml"
 
-function generate_and_sample(num_types::Int)
-    # Créer un vecteur d'entiers aléatoires pour les types de cellules
-    vecteur_aleatoire = rand(1:num_types, 10)
-    println("Vecteur aléatoire généré pour cell_type_sequence : ", vecteur_aleatoire)
-    return vecteur_aleatoire
-end
 
-# Choisir le nombre de types de cellules en fonction du nombre de fonctions générées
+# Choose the number of cell types according to the number of functions generated
 num_cell_types = 10
 cell_type_sequence = generate_and_sample(num_cell_types)
 

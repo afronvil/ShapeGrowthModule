@@ -162,3 +162,10 @@ function calculate_spatial_moments(cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, m
 
     return moments
 end
+
+function generate_and_sample(num_types::Int)
+    # Create a vector of random integers for cell types
+    vecteur_aleatoire = rand(1:num_types, 10)
+    println("Random vector generated for cell_type_sequence : ", vecteur_aleatoire)
+    return vecteur_aleatoire
+end

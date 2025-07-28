@@ -1,11 +1,10 @@
 using ShapeGrowthModule
-using Plots # S'assurer que Plots est chargé
 
-# --- CONFIGURATION DE LA DimENSION ---
+# --- DIMENSION CONFIGURATION---
 const Dim = 2 # Changez ceci à 2 pour 2D, à 3 pour 3D
 # ------------------------------------
 
-# Ces fonctions doivent être définies AVANT d'être passées à set_max_function!
+# These functions must be defined BEFORE being passed to set_max_function!
 fct7(cell::Cell) = round(15*sin(cell.coordinates[1])) + 5
 fct8(cell::Cell) = 50
 fct9(cell::Cell) = round( 15 * sin(cell.coordinates[1])) + 5
@@ -18,15 +17,13 @@ cell_type_sequence=[128, 129]#,122,126]#7, 8, 9, 7]#128,
 num_steps = 20
 dist_cellule_fibroblast = 5.0
 
-# --- GÉNÉRALISATION DE LA CRÉATION DES CELLULES ET DE LA TAILLE DE LA GRILLE ---
-
-# Définir la position d'origine des cellules initiales en fonction de la Dimension
+# Define initial cell positions according to Dimension
 initial_cell_origin = if Dim == 2
     (50, 50)
 elseif Dim == 3
     (50, 50, 5)
 else
-    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
+    error("Dimension not supported: $(Dim). Utilisez 2 ou 3.")
 end
 
 initial_stromal_cell_origin = if Dim == 2
@@ -34,16 +31,16 @@ initial_stromal_cell_origin = if Dim == 2
 elseif Dim == 3
     (50, 50, 5)
 else
-    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
+    error("Dimension not supported: $(Dim). Utilisez 2 ou 3.")
 end
 
-# Définir la taille de la grille en fonction de la Dimension
+# Define grid size according to Dimension
 grid_size = if Dim == 2
     (100, 100)
 elseif Dim == 3
     (100, 100, 10)
 else
-    error("Dimension non supportée: $(Dim). Utilisez 2 ou 3.")
+    error("Dimension not supported:$(Dim). Utilisez 2 ou 3.")
 end
 
 const DEFAULT_STROMAL_CELL_TYPE = 99 
@@ -71,7 +68,7 @@ model = CellModel{Dim}(
 
 
 
-# Définition des fonctions de calcul de max_divisions pour chaque type de cellule
+# Definition of max_divisions calculation functions for each cell type
 set_max_function!(model, 7, fct7)
 set_max_function!(model, 8, fct8)
 set_max_function!(model, 9, fct9)

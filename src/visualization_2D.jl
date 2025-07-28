@@ -9,21 +9,20 @@ import ..ShapeGrowthModule
 """
     visualize_final_state_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int)
 
-Génère une image 2D (heatmap) du dernier état des cellules sur la grille, en utilisant
-les couleurs spécifiées dans le fichier XML du modèle.
-Chaque cellule est visualisée comme un bloc de `block_size_rows` x `block_size_cols` pixels.
+Generates a 2D image (heatmap) of the last cell state on the grid, using
+the colors specified in the template XML file.
+Each cell is visualized as a block of `block_size_rows` x `block_size_cols` pixels.
 
 # Arguments
-- `model::CellModel{2}`: L'instance du modèle de simulation (doit être de Dim=2).
-- `output_filename::String`: Le chemin complet et le nom du fichier image à sauvegarder (ex: "output.png").
-- `block_size_rows::Int`: Le nombre de rangées de pixels que chaque cellule logique occupe.
-- `block_size_cols::Int`: Le nombre de colonnes de pixels que chaque cellule logique occupe.
-"""
+- `model::CellModel{2}`: The simulation model instance (must be Dim=2).
+- `output_filename::String`: The full path and name of the image file to be saved (e.g. "output.png").
+- `block_size_rows::Int`: The number of pixel rows each logical cell occupies.
+- `block_size_cols::Int`: The number of pixel columns each logical cell occupies."""
 function visualize_final_state_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int)
-    println("DEBUG: Début de la visualisation 2D de l'état final avec couleurs XML.")
+    #println("DEBUG: Start of 2D visualization of final state with XML colors.")
 
     if isempty(model.history)
-        @warn "L'historique du modèle est vide. Impossible de visualiser l'état final."
+        @warn "The model history is empty. Cannot view final state."
         return
     end
 
@@ -81,7 +80,7 @@ function visualize_final_state_2D(model::CellModel{2}, output_filename::String, 
     # Créer et sauvegarder le heatmap
     # Quand on passe une matrice de couleurs, `c` et `clims` ne sont plus nécessaires
     heatmap_plot = Plots.heatmap(grid_matrix_pixels+length(model.stromal_cells)*grid_stromal_matrix_pixels,
-            title="État Final des Cellules (2D - Dim: 2, Cellules: $(block_size_rows)x$(block_size_cols))",
+            title="Final cell status (2D - Dim: 2, Cells: $(block_size_rows)x$(block_size_cols))",
             aspect_ratio=:equal,
             # c=:viridis, # N'est plus nécessaire car les couleurs sont directes
             # clims=(min_val_for_color_scale, max_val_for_color_scale > 0 ? max_val_for_color_scale : 1.0), # N'est plus nécessaire
@@ -92,27 +91,27 @@ function visualize_final_state_2D(model::CellModel{2}, output_filename::String, 
             size=(700, 700)) 
 
     Plots.savefig(heatmap_plot, output_filename)
-    println("DEBUG: Image 2D de l'état final sauvegardée en : $output_filename")
+    #println("DEBUG: 2D image of final state saved as : $output_filename")
 end
 
 """
-    visualize_history_animation_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int, fps::Int=10)
+visualize_history_animation_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int, fps::Int=10)
 
-Génère une animation GIF de l'évolution des cellules 2D à travers l'historique de la simulation,
-en utilisant les couleurs spécifiées dans le fichier XML du modèle.
+Generates a GIF animation of the evolution of 2D cells through the simulation history,
+using the colors specified in the model XML file.
 
 # Arguments
-- `model::CellModel{2}`: L'instance du modèle de simulation (doit être de Dim=2).
-- `output_filename::String`: Le chemin complet et le nom du fichier GIF à sauvegarder (ex: "animation.gif").
-- `block_size_rows::Int`: Le nombre de rangées de pixels que chaque cellule logique occupe.
-- `block_size_cols::Int`: Le nombre de colonnes de pixels que chaque cellule logique occupe.
-- `fps::Int`: Images par seconde pour l'animation.
+- `model::CellModel{2}`: The simulation model instance (must be Dim=2).
+- output_filename::String`: The full path and name of the GIF file to be saved (e.g. "animation.gif").
+- `block_size_rows::Int`: The number of pixel rows each logical cell occupies.
+- `block_size_cols::Int`: The number of columns of pixels each logical cell occupies.
+- fps::Int`: Frames per second for animation.
 """
 function visualize_history_animation_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int, fps::Int=10)
-    println("DEBUG: Début de la génération de l'animation 2D de l'historique avec couleurs XML.")
+    #println("DEBUG: Start of generation of 2D animation of history with XML colors.")
 
     if isempty(model.history)
-        @warn "L'historique du modèle est vide. Impossible de générer l'animation 2D."
+        @warn "The model history is empty. Unable to generate 2D animation."
         return
     end
 
@@ -162,7 +161,7 @@ function visualize_history_animation_2D(model::CellModel{2}, output_filename::St
             end
         end
         Plots.heatmap(grid_matrix_pixels+grid_stromal_matrix_pixels,
-                title="Étape $(step_idx-1) (2D - Dim: 2, Cellules: $(block_size_rows)x$(block_size_cols))",
+                title="Step $(step_idx-1) (2D - Dim: 2, Cells: $(block_size_rows)x$(block_size_cols))",
                 aspect_ratio=:equal,
                 xlims=(0.5, grid_cols_pixels + 0.5), 
                 ylims=(0.5, grid_rows_pixels + 0.5), 
@@ -172,6 +171,6 @@ function visualize_history_animation_2D(model::CellModel{2}, output_filename::St
     end
         
         Plots.gif(anim, output_filename, fps=fps)
-        println("DEBUG: Animation 2D de l'historique sauvegardée en : $output_filename")
+        #println("DEBUG: 2D animation of history saved in : $output_filename")
 end
 
