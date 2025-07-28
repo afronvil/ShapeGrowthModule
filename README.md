@@ -63,6 +63,18 @@ Une fois dans le REPL Julia, activez l'environnement du projet et installez les 
 
 How to use :
 
+In the file $HOME/.julia/config/startup.jl, 
+```
+push!(LOAD_PATH, "/path/to/rep_containing_ShapeGrowthModule.jl/")
+```
+Restart Julia (modified) 
+
+then in Julia
+
+```julia
+using ShapeGrowthModule
+```
+
 Here's a basic example of how to run a simulation and visualize the results using the module.
 
 The main example script is expl/flag.jl. You can launch it from the Julia REPL:
