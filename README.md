@@ -57,11 +57,21 @@ Julia
 
 Utilisation
 
+Dans le fichier $HOME/.julia/config/startup.jl, 
+mettre push!(LOAD_PATH, "/path/to/rep_containing_ShapeGrowthModule.jl/")
+
+Redémarrer Julia. (modifié) 
+
+puis dans Julia
+
+Julia
+using ShapeGrowthModule
+
+
 Voici un exemple basique de comment lancer une simulation et visualiser les résultats en utilisant le module.
 
 Le script d'exemple principal est expl/flag.jl. Vous pouvez le lancer depuis le REPL Julia :
 Julia
-
 julia> include("expl/flag.jl")
 
 Configuration des Types Cellulaires
