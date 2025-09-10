@@ -1,9 +1,15 @@
-"""Attempts to make a cell proliferate in a given direction."""
-function try_proliferate!(model::CellModel{Dim}, next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, parent_cell::Cell{Dim}, dir::NTuple{Dim, Int64}, max_div::Int64) where Dim
+# src/pdma.jl
+using Distances
+
+"""
+Tente de faire proliférer une cellule dans une direction donnée.
+Cette fonction est maintenant responsable de l'ajout de la cellule parente et de la nouvelle cellule à 'next_cells'.
+"""
+function try_proliferate!(model::CellModel, next_cells::Dict{Vector{Int64}, Cell}, parent_cell::Cell, dir::Vector{Int64}, max_div::Int64)
     if parent_cell.is_alive && parent_cell.nbdiv < max_div && !parent_cell.has_proliferated_this_step
         new_coords = parent_cell.coordinates .+ dir
-        
-        # Vérification des bornes dimension-agnostique
+        Dim=length(model.grid_size)
+        # Vérification des bornes
         is_in_bounds = true
         for i in 1:Dim
             if !(1 <= new_coords[i] <= model.grid_size[i])
@@ -12,21 +18,29 @@ function try_proliferate!(model::CellModel{Dim}, next_cells::Dict{NTuple{Dim, In
             end
         end
 
+        # Vérifie si les nouvelles coordonnées sont à l'intérieur de la grille et non occupées
         if is_in_bounds && !haskey(next_cells, new_coords)
+            # Met à jour la cellule parente
             parent_cell.last_division_type = parent_cell.cell_type
             parent_cell.nbdiv += 1
             parent_cell.has_proliferated_this_step = true
             next_index_in_sequence = parent_cell.current_type_index_in_sequence
-            new_cell = Cell{Dim}(new_coords, 0, parent_cell.cell_type, parent_cell.cell_type, parent_cell.last_division_type, parent_cell.nbdiv, parent_cell.nbdiv, true, false, next_index_in_sequence)
+            
+            # Crée la nouvelle cellule
+            new_cell = Cell(new_coords, 0, parent_cell.cell_type, parent_cell.cell_type, parent_cell.last_division_type, parent_cell.nbdiv, parent_cell.nbdiv, true, false, next_index_in_sequence)
+
+            
+            # Ajoute la cellule parente et la nouvelle cellule à la prochaine étape de la simulation
             next_cells[parent_cell.coordinates] = parent_cell
             next_cells[new_coords] = new_cell
+            
             return true
         end
     end
     return false
 end
 
-function _update_on_successful_proliferation!(next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, temp_next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, parent_coords::NTuple{Dim, Int64}) where Dim
+function _update_on_successful_proliferation!(next_cells::Dict{Vector{Int64}, Cell}, temp_next_cells::Dict{Vector{Int64}, Cell}, parent_coords::Vector) 
     next_cells[parent_coords] = temp_next_cells[parent_coords]
     for (coord, new_c) in temp_next_cells
         if coord != parent_coords && !haskey(next_cells, coord)
@@ -34,28 +48,26 @@ function _update_on_successful_proliferation!(next_cells::Dict{NTuple{Dim, Int64
         end
     end
 end
-
-"""Simulates one step of cellular evolution."""
-
 function attempt_proliferation!(
-    model::CellModel{Dim} ,
-    next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, 
-    current_cell::Dict{NTuple{Dim, Int64}, Cell{Dim}}, 
-    cell::Cell{Dim}, 
+    model::CellModel,
+    next_cells::Dict{Vector{Int64}, Cell}, 
+    current_cells::Dict{Vector{Int64}, Cell}, 
+    cell::Cell, 
     cell_directions_int::Vector{Int64}, 
-    directions::Vector{NTuple{Dim, Int64}}, 
-    max_cell_division::Real) where Dim
+    directions::Vector{Vector{Int64}}, 
+    max_cell_division::Real)
+    
     max_div = convert(Int64, max_cell_division)
     
-    # Return (action_occurred, proliferated_count, differenciation_count, apoptosis_count, converted_to_stromal_count)  
+    # Vérifications initiales
     if !cell.is_alive || cell.nbdiv >= max_div || cell.has_proliferated_this_step
         return (false, 0, 0, 0, 0)
     end
-
+    
+    
     found_close_stromal_cell = false
-    # --- Start of checks for stromal cells ---
-    # IMPORTANT: Check if model.stromal_cells is not nothing AND not empty
-    if !isnothing(model.stromal_cells) #&& !isempty(model.stromal_cells)
+    # IMPORTANT: Vérifie si model.stromal_cells n'est pas "nothing" ET pas vide
+    if !isnothing(model.stromal_cells) # && !isempty(model.stromal_cells)
         for (stromal_coord, _) in model.stromal_cells
             if euclidean_distance(cell.coordinates, stromal_coord) <= model.dist_cellule_fibroblast
                 found_close_stromal_cell = true
@@ -63,8 +75,7 @@ function attempt_proliferation!(
             end
         end
     end
-    # --- End of checks for stromal cells ---
-    
+
     if !found_close_stromal_cell && !isnothing(model.stromal_cells) && !isempty(model.stromal_cells)
 
         # Logic for converting a cell to stromal if no close stromal cell is found.
@@ -72,29 +83,30 @@ function attempt_proliferation!(
         
         # Ensure model.stromal_cells is initialized as a Dict if it's currently nothing
         if isnothing(model.stromal_cells)
-            model.stromal_cells = Dict{NTuple{Dim, Int64}, StromalCell{Dim}}()
+            model.stromal_cells = Dict{Vector{Int64}, StromalCell}()
         end
 
         # Create the new stromal cell
         # You might want to assign a specific stromal cell type (e.g., DEFAULT_STROMAL_CELL_TYPE)
         # instead of using cell.cell_type for the new stromal cell.
-        new_stromal_cell = StromalCell{Dim}(
-                cell.coordinates,
-                cell.timer,
-                cell.cell_type, # Consider using a fixed DEFAULT_STROMAL_CELL_TYPE here
-                cell.cell_type, # Same here
-                cell.cell_type, # Same here
-                0,
-                0, # max_divisions_allowed
-                true, # is_alive
-                false # proliferated_this_step
-            )
+
+        new_stromal_cell = StromalCell(
+            cell.coordinates,
+            cell.timer,
+            cell.cell_type, # Consider using a fixed DEFAULT_STROMAL_CELL_TYPE here
+            cell.cell_type, # Same here
+            cell.cell_type, # Same here
+            0,
+            0, # max_divisions_allowed
+            true, # is_alive
+            false # proliferated_this_step
+        )
         model.stromal_cells[cell.coordinates] = new_stromal_cell
         
         # Mark the original cell as dead if it's being replaced by the stromal cell
         # This contributes to apoptosis_count, as the original cell "dies" to become stromal.
         if haskey(next_cells, cell.coordinates)
-            apoptosis!(next_cells, cell) # Remove original cell from next_cells if it's there
+            apoptosis!(next_cells, cell)  # Remove original cell from next_cells if it's there
         else
             # If not in next_cells, we need to ensure it's not processed later
             # (e.g., mark as dead, or ensure it's not added back if not already)
@@ -137,8 +149,9 @@ function attempt_proliferation!(
     return (false, 0, 0, 0, 0) # No action
 end
 
+
 """Performs the differentiation of a cell to a new type."""
-function differentiation!(next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, cell::Cell{Dim}, new_type::Int64) where Dim
+function differentiation!(next_cells::Dict{Vector{Int64}, Cell}, cell::Cell, new_type::Symbol) 
     if cell.is_alive
         cell.cell_type = new_type
         cell.nbdiv = 0
@@ -149,7 +162,7 @@ end
 
 
 """Attempts to differentiate cells and then make them proliferate."""
-function _restore_cell_state!(next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, cell::Cell{Dim}, original_cell_type::Int64, original_nbdiv::Int64) where Dim
+function _restore_cell_state!(next_cells::Dict{Vector{Int64}, Cell}, cell::Cell, original_cell_type::Symbol, original_nbdiv::Int64) 
     coords = cell.coordinates
     next_cells[coords].cell_type = original_cell_type
     next_cells[coords].nbdiv = original_nbdiv
@@ -158,15 +171,15 @@ function _restore_cell_state!(next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, c
 end
 
 function _attempt_differentiation_and_proliferation!(
-    model::CellModel{Dim},
-    next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}},
-    cell::Cell{Dim},
+    model::CellModel,
+    next_cells::Dict{Vector{Int64}, Cell},
+    cell::Cell,
     next_type_index::Int64,
-    next_type::Int64,
-    proliferation_directions::Dict{Int64, Vector{NTuple{Dim, Int64}}},
+    next_type::Symbol,
+    proliferation_directions::Dict{Symbol, Vector{Vector{Int64}}},
     max_cell_division::Int64,
-    processed_coords::Set{NTuple{Dim, Int64}}
-)::Bool where Dim
+    processed_coords::Vector{Vector{Int64}}
+)::Bool 
     differentiation!(next_cells, cell, next_type)
     coords = cell.coordinates
 
@@ -187,10 +200,10 @@ function _attempt_differentiation_and_proliferation!(
     return false
 end
 
-function try_differentiate!(model::CellModel{Dim} ,next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, current_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, cell_type_sequence::Vector{Int64}, proliferation_directions::Dict{Int64, Vector{NTuple{Dim, Int64}}}, max_cell_division::Real, grid_size::NTuple{Dim, Int64}, cell_type_to_process::Int64) where Dim
+function try_differentiate!(model::CellModel ,next_cells::Dict{Vector{Int64}, Cell}, current_cells::Dict{Vector{Int64}, Cell}, cell_type_sequence::Vector{Symbol}, proliferation_directions::Dict{Symbol, Vector{Vector{Int64}}}, max_cell_division::Real, grid_size::Vector{Int64} , cell_type_to_process::Symbol) 
     max_div_int = convert(Int64, max_cell_division)
     cells_to_differentiate = [cell for cell in values(current_cells) if cell.is_alive && cell.cell_type == cell_type_to_process && !cell.has_proliferated_this_step]
-    processed_coords = Set{NTuple{Dim, Int64}}()
+    processed_coords = Vector{Vector{Int64}}()
 
     differentiated_and_proliferated = false
 
@@ -230,8 +243,9 @@ function try_differentiate!(model::CellModel{Dim} ,next_cells::Dict{NTuple{Dim, 
 end
 
 
-"""Attempts to make a cell migrate in a given direction."""
-function try_migrate!(next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, current_cell::Cell{Dim}, dir::NTuple{Dim, Int64}, max_migration_count::Int64, grid_size::NTuple{Dim, Int64}) where Dim
+"""Tente de faire migrer une cellule dans une direction donnée."""
+function try_migrate!(model::CellModel, next_cells::Dict{Vector{Int64}, Cell}, current_cell::Cell, dir::Vector{Int64}, max_migration_count::Int64, grid_size::Vector{Int64})
+    Dim=length(model.grid_size)
     if current_cell.is_alive && current_cell.nbmig < max_migration_count && !current_cell.has_migrated_this_step
         new_coords = current_cell.coordinates .+ dir
         
@@ -243,19 +257,19 @@ function try_migrate!(next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, current_c
             end
         end
 
-        if is_in_bounds && !haskey(next_cells, new_coords) # Vérifier si la nouvelle coordonnée est vide
-            # Sauvegarder la référence de la cellule avant de la déplacer
+        if is_in_bounds && !haskey(next_cells, new_coords)
+            # Sauvegarde la référence de la cellule avant de la déplacer
             cell_to_move = next_cells[current_cell.coordinates]
             
-            # Supprimer la cellule de son ancienne position
+            # Supprime la cellule de son ancienne position
             delete!(next_cells, current_cell.coordinates) 
             
-            # Mettre à jour les propriétés de la cellule
+            # Met à jour les propriétés de la cellule
             cell_to_move.nbmig += 1
             cell_to_move.has_migrated_this_step = true
-            cell_to_move.coordinates = new_coords # Mettre à jour les coordonnées de l'objet cellule
+            cell_to_move.coordinates = new_coords
             
-            # Ajouter la cellule à sa nouvelle position
+            # Ajoute la cellule à sa nouvelle position
             next_cells[new_coords] = cell_to_move 
             return true
         end
@@ -263,32 +277,28 @@ function try_migrate!(next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, current_c
     return false
 end
 
-"""Attempts to make a cell migrate in all possible directions for its type."""
+"""Tente de faire migrer une cellule dans toutes les directions possibles pour son type."""
 function attempt_migration!(
-    next_cells_dict::Dict{NTuple{Dim, Int64}, Cell{Dim}},
-    cell::Cell{Dim},
-    directions::Vector{NTuple{Dim, Int64}}, # Directions spécifiques pour la migration
-    max_cell_migration_count::Int64, # Nombre maximum de migrations que la cellule peut effectuer
-    grid_size::NTuple{Dim, Int64}
-) where Dim
+    next_cells_dict::Dict{Vector{Int64}, Cell},
+    cell::Cell,
+    directions::Vector{Vector{Int64}},
+    max_cell_migration_count::Int64,
+    grid_size::Vector{Int64}
+)
     if cell.is_alive && !cell.has_migrated_this_step
-        # Itérer sur les directions possibles pour la migration
         for dir in directions
-            # Tenter de faire migrer cette cellule
             if try_migrate!(next_cells_dict, cell, dir, max_cell_migration_count, grid_size)
-                # Si la migration réussit, marquer la cellule et retourner vrai
                 cell.has_migrated_this_step = true
                 return true
             end
         end
     end
-    return false # La migration n'a pas eu lieu
+    return false
 end
 
 
-# Fonctions d'apoptose : consolidées pour marquer la cellule comme non-vivante
-"""Marks a cell for apoptosis (sets is_alive to false)."""
-function apoptosis!(next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, cell::Cell{Dim}) where Dim
+"""Marque une cellule pour l'apoptose (définit is_alive à "false")."""
+function apoptosis!(next_cells::Dict{Vector{Int64}, Cell}, cell::Cell)
     if cell.is_alive && haskey(next_cells, cell.coordinates)
         next_cells[cell.coordinates].is_alive = false
         return true
@@ -296,7 +306,7 @@ function apoptosis!(next_cells::Dict{NTuple{Dim, Int64}, Cell{Dim}}, cell::Cell{
     return false
 end
 
-function _handle_apoptosis!(next_cells_dict::Dict{NTuple{Dim, Int64}, Cell{Dim}}, cell::Cell{Dim})::Int64 where Dim
+function _handle_apoptosis!(next_cells_dict::Dict{Vector{Int64}, Cell}, cell::Cell)::Int64
     apoptosis_count = 0
     if cell.is_alive # Seulement si la cellule est encore vivante, tenter l'apoptose
         if apoptosis!(next_cells_dict, cell)

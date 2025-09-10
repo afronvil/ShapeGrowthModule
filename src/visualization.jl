@@ -1,55 +1,60 @@
-using PlotlyJS 
-using ColorTypes # Nécessaire pour le type RGB
+using PlotlyJS
+using ColorTypes # Required for the RGB type
 
 import ..ShapeGrowthModule 
 
-block_size_rows = 5
-block_size_cols = 5
-function visualization(model::CellModel{Dim}) where Dim 
-    cell_type_sequence=model.cell_type_sequence
+"""
+    visualization(model::CellModel)
+
+Handles all visualization tasks for the cellular automaton model, dispatching
+to the appropriate 2D or 3D functions based on the model's dimension.
+"""
+function visualization(model::CellModel)
+    # Get the dimension directly from the model's grid_size
+    Dim = length(model.grid_size)
+    
+    # 1. Define output directories based on script name and dimension
     script_name = if Base.source_path() !== nothing
         splitext(basename(Base.source_path()))[1]
     else
-        "simulation_script" 
+        "simulation_script"
     end
     
-    base_output_dir = "../results/"
-
+    base_output_dir = "expl/results/"
     specific_output_dir = joinpath(base_output_dir, script_name)
-    output_dir_2D = joinpath(specific_output_dir, "2D")
-    output_dir_3D = joinpath(specific_output_dir, "3D")
-
-    if !isdir(specific_output_dir)
-        mkpath(specific_output_dir)
-        #println("DEBUG: Output directory created: ", specific_output_dir)
+    output_dir = joinpath(specific_output_dir, "$(Dim)D")
+    
+    if !isdir(output_dir)
+        mkpath(output_dir)
+        println("Output directory created: ", output_dir)
     end
 
-    if !isdir(output_dir_2D)
-        mkpath(output_dir_2D) 
-       #println("DEBUG: Output directory created: ", output_dir_2D)
-    end
+    cell_type_sequence = model.cell_type_sequence
+    sequence_string = join(cell_type_sequence, "_")
+    
+    # 2. Call the visualization functions based on dimension
+    if Dim == 2
+        # Define visualization-specific parameters
+        block_size_rows = 5
+        block_size_cols = 5
+        animation_fps = 10 # Frames per second for the GIF
 
-    if !isdir(output_dir_3D)
-        mkpath(output_dir_3D) 
-        #println("DEBUG: Output directory created: ", output_dir_3D)
+        # Visualize the LAST 2D state (static image)
+        final_image_filename = joinpath(output_dir, "$(sequence_string)_final_state_Dim2.png")
+        visualize_final_state_2D(model, final_image_filename, block_size_rows, block_size_cols)
+        println("2D image of final state saved: ", final_image_filename)
+        
+        # Visualize ALL 2D HISTORY (GIF animation)
+        animation_filename = joinpath(output_dir, "$(sequence_string)_history_Dim2.gif")
+        visualize_history_animation_2D(model, animation_filename, block_size_rows, block_size_cols, animation_fps)
+        println("2D history animation saved: ", animation_filename)
+
+    elseif Dim == 3
+        # Visualize LAST 3D state (interactive PlotlyJS window)
+        visualize_3D_cells(model)
+        
+        # Visualize ALL 3D HISTORY (interactive HTML frames in one folder)
+        visualize_history_3D_plotly_frames(model, output_dir)
+        println("Interactive 3D history frames are saved in folder: ", output_dir)
     end
-    if Dim == 2 
-        # View LAST 2D state (static image)
-        # Use sequence string in file name
-        final_image_filename_2D = joinpath(output_dir_2D, "$(cell_type_sequence)_final_state_Dim2.png")
-        visualize_final_state_2D(model, final_image_filename_2D, block_size_rows, block_size_cols)
-        #println("DEBUG: 2D image of final state saved: ", final_image_filename_2D)
-        # View ALL 2D HISTORY (GIF animation)
-        # Use sequence string in file name
-        animation_filename_2D = joinpath(output_dir_2D, "$(cell_type_sequence)_history_Dim2.gif")
-        visualize_history_animation_2D(model, animation_filename_2D, block_size_rows, block_size_cols, 10) 
-        #println("DEBUG: 2D history animation saved: ", animation_filename_2D)
-    else # Implies DIM == 3
-        # LAST 3D status display (interactive PlotlyJS window)
-        visualize_3D_cells(model, Dim, cell_type_sequence) 
-        # View ALL 3D HISTORY (interactive HTML frames in one folder)
-        # Create a unique subfolder for 3D frames based on sequence
-        visualize_history_3D_plotly_frames(model, Dim, output_dir_3D)
-        #println("DEBUG: History interactive 3D frames are saved in folder: ", output_dir_3D)    
-    end 
 end

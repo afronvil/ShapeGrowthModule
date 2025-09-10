@@ -33,11 +33,12 @@ include("utils.jl")
 include("data_xml.jl")  
 include("functions_max.jl")      # Include data loading functions (like load_cell_data) before they are used
 include("functions.jl") 
+include("pdma.jl") 
       # General utility functions
 include("visualization.jl") 
 include("visualization_2D.jl") # Visualization functions
 include("visualization_3D.jl") # 3D visualization functions
-include("capture_basin.jl")
+#include("capture_basin.jl")
 
 #include("initialization.jl") # Initialization functions that depend on the above files
 # If you want to make specific functions or variables accessible directly
@@ -52,10 +53,11 @@ include("capture_basin.jl")
     export reconfigure_model_with_sequence!, set_subdivision!
     export visualize_cells_dict # Si vous avez une fonction visualize_cells exportable
     export load_cell_data
+    export middle, add_initial_cell, create_default_initial_cells_dict, create_initial_stromal_cells_dict
     export get_generated_form, generate_and_sample
     export visualize_history
     export create_directions, create_directions_dict
-    export load_cell_data
+    export set_cell_data
     export create_max_cell_divisions_dict
     export set_type_sequence!
     export run!, visualization, set_max_function!, set_type_sequence!
