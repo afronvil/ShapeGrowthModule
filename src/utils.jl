@@ -117,7 +117,7 @@ function create_default_initial_cells_dict(initial_cell_origin::Vector{Int64}, i
         initial_cell_type=initial_type,
         last_division_type=initial_type,
         nbdiv=0,
-        max_divisions=0,
+        max_cell_divisions=5,
         is_alive=true,
         has_proliferated_this_step=false,
         current_type_index_in_sequence=1,

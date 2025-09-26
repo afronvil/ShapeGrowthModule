@@ -68,7 +68,7 @@ model = CellModel{Dim}(
 
 
 
-# Definition of max_divisions calculation functions for each cell type
+# Definition of max_cell_divisions calculation functions for each cell type
 set_max_function!(model, 7, fct7)
 set_max_function!(model, 8, fct8)
 set_max_function!(model, 9, fct9)

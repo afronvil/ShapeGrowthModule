@@ -1,70 +1,34 @@
-# expl/flag.jl
 using ShapeGrowthModule
-# --- CONFIGURATION DE LA DimENSION ---
-const Dim = 2 # Changez ceci à 2 pour 2D, à 3 pour 3D
+
+
+model = CellModel(
+    cell_type_sequence = [:WQ, :NQ, :EQ, :WQ  ] ,
+    grid_size = [100, 100]#, 100],
+)
 # ------------------------------------
 
-# Ces fonctions doivent être définies AVANT d'être passées à set_max_function!
-fct7(cell::Cell{Dim}) = 5
-fct8(cell::Cell{Dim}) = 10
-fct9(cell::Cell{Dim}) = 5
+#max_cell_divisions = model.cell_data[cell_type]["directions"]
 
-xml_file_path = "xml/cellTypes130.xml"
-cell_type_sequence=[7, 8, 9, 7]
-num_steps = 10
-
-cell_data = load_cell_data(xml_file_path, cell_type_sequence)
-# --- GÉNÉRALISATION DE LA CRÉATION DES CELLULES ET DE LA TAILLE DE LA GRILLE ---
-
-block_size_rows = 5
-block_size_cols = 5
-
-initial_cell_origin = if Dim == 2
-    (50, 50)
-elseif Dim == 3
-    (50, 50, 5)
-else
-    error("Unsupported dimension: $(Dim). Use 2 or 3.")
-end
+Dim=length(model.grid_size)
+println("Dimension of the model: ", Dim)
 
 
-# Définir la taille de la grille en fonction de la dimension
-grid_size = if Dim == 2
-    (100, 100)
-elseif Dim == 3
-    (100, 100, 10)
-else
-    error("Unsupported dimension: $(Dim). Use 2 or 3.")
-end
+initial_cell_origin = middle(model.grid_size)
+initial_cells_dict = create_default_initial_cells_dict(initial_cell_origin, model.cell_type_sequence[1])
+model.tissue_cells = initial_cells_dict
 
+# Définition des fonctions de calcul de max_cell_divisions pour chaque type de cellule
+set_max_function!(model, :WQ, cell -> 5)
+set_max_function!(model, :NQ, cell -> 10)
+set_max_function!(model, :EQ, cell -> 5)
 
-
-my_initial_cells_dict = create_default_initial_cells_dict(
-    Val(Dim), 
-    initial_cell_origin, 
-    cell_type_sequence[1])
-
-
-model = CellModel{Dim}(
-    initial_cells_dict = my_initial_cells_dict, # This should still be a CellSetByCoordinates
-    cell_data = cell_data,
-    cell_type_sequence = cell_type_sequence,
-    grid_size = grid_size,
-    initial_stromal_cells_dict = Dict{NTuple{Dim, Int64}, StromalCell{Dim}}()
-)
-
-# Définition des fonctions de calcul de max_divisions pour chaque type de cellule
-set_max_function!(model, 7, fct7)
-set_max_function!(model, 8, fct8)
-set_max_function!(model, 9, fct9)
+set_cell_data(model)
 
 println("Start simulation...")
-# Exécution de la simulation
-run!(model, num_steps=num_steps) # Nombre d'étapes augmenté pour une meilleure visibilité
+# Exécution de la simulation en utilisant l'argument mot-clé
+run!(model, num_steps=40)
 println("Simulation complete.")
 
-
 # Visualisation des résultats
-
 visualization(model)
 println("Script execution completed.")

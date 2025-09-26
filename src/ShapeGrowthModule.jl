@@ -22,7 +22,7 @@ using PlotlyJS
 
 const PROJECT_ROOT = dirname(dirname(@__FILE__)) 
 # Define the path to the XML file
-xml_file = "xml/cellTypes.xml"
+#xml_file = "xml/cellTypes.xml"
 
 const DEFAULT_STROMAL_CELL_TYPE = 99 # <--- AJOUTEZ CETTE LIGNE (utilisez la valeur appropriée pour votre type de cellule stromale par défaut)
 const STROMAL_PROXIMITY_DISTANCE = 3
@@ -30,11 +30,10 @@ const STROMAL_PROXIMITY_DISTANCE = 3
 
 include("struct_cell_env.jl") # Include cell structures first if initialization depends on them
 include("utils.jl") 
-include("data_xml.jl")  
+include("data_lettres.jl")   
 include("functions_max.jl")      # Include data loading functions (like load_cell_data) before they are used
 include("functions.jl") 
-include("pdma.jl") 
-      # General utility functions
+include("pdma_lettres.jl") 
 include("visualization.jl") 
 include("visualization_2D.jl") # Visualization functions
 include("visualization_3D.jl") # 3D visualization functions

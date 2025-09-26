@@ -55,7 +55,7 @@ model = CellModel(
 )
 
 
-# Définition des fonctions de calcul de max_divisions pour chaque type de cellule
+# Définition des fonctions de calcul de max_cell_divisions pour chaque type de cellule
 set_max_function!(model, 7, fct7)
 set_max_function!(model, 8, fct8)
 set_max_function!(model, 9, fct9)

@@ -25,8 +25,8 @@ function visualize_final_state_2D(model::CellModel, output_filename::String, blo
         return
     end
 
-    final_state_cells = model.history[end].cells
-    final_stromal_cells= model.history[end].stromal_cells
+    final_state_tissue_cells = model.history[end].tissue_cells
+    final_stromal_tissue_cells= model.history[end].stromal_tissue_cells
 
     grid_rows_pixels = model.grid_size[1] * block_size_rows
     grid_cols_pixels = model.grid_size[2] * block_size_cols
@@ -34,8 +34,8 @@ function visualize_final_state_2D(model::CellModel, output_filename::String, blo
     background_color = RGB(0.0, 0.0, 0.0)
     grid_matrix_pixels = fill(background_color, grid_rows_pixels, grid_cols_pixels)
 
-    # Fill the pixel matrix with data from the non-stromal cells
-    for (coords, cell) in final_state_cells
+    # Fill the pixel matrix with data from the non-stromal tissue_cells
+    for (coords, cell) in final_state_tissue_cells
         r_meta, c_meta = coords[1], coords[2]
 
         start_r_pixel = (r_meta - 1) * block_size_rows + 1
@@ -53,8 +53,8 @@ function visualize_final_state_2D(model::CellModel, output_filename::String, blo
         end
     end
     
-    # Overlay the stromal cells
-    for (coords, stromal_cell) in final_stromal_cells
+    # Overlay the stromal tissue_cells
+    for (coords, stromal_cell) in final_stromal_tissue_cells
         r_meta, c_meta = coords[1], coords[2]
 
         start_r_pixel = (r_meta - 1) * block_size_rows + 1
@@ -88,7 +88,7 @@ end
 """
 visualize_history_animation_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int, fps::Int=10)
 
-Generates a GIF animation of the evolution of 2D cells through the simulation history,
+Generates a GIF animation of the evolution of 2D tissue_cells through the simulation history,
 using the colors specified in the model XML file.
 
 # Arguments
@@ -112,8 +112,8 @@ function visualize_history_animation_2D(model::CellModel, output_filename::Strin
         # Create a single pixel matrix for this frame
         grid_matrix_pixels = fill(background_color, grid_rows_pixels, grid_cols_pixels)
 
-        # Fill with regular cells first
-        for (coords, cell) in history_entry.cells   
+        # Fill with regular tissue_cells first
+        for (coords, cell) in history_entry.tissue_cells   
             r_meta, c_meta = coords[1], coords[2] 
             start_r_pixel = (r_meta - 1) * block_size_rows + 1
             start_c_pixel = (c_meta - 1) * block_size_cols + 1
@@ -129,8 +129,8 @@ function visualize_history_animation_2D(model::CellModel, output_filename::Strin
             end
         end
         
-        # Overlay with stromal cells
-        for (coords, stromal_cell) in history_entry.stromal_cells   
+        # Overlay with stromal tissue_cells
+        for (coords, stromal_cell) in history_entry.stromal_tissue_cells   
             r_meta, c_meta = coords[1], coords[2] 
             start_r_pixel = (r_meta - 1) * block_size_rows + 1
             start_c_pixel = (c_meta - 1) * block_size_cols + 1

@@ -57,16 +57,16 @@ function generate_cell_type_sequence(num_elements::Int, max_type::Int)
     return cell_type_sequence
 end
 
-function calculate_max_divisions(model::CellModel, cell::Cell) # Pas besoin de Dim ici
-    if haskey(model.max_division_functions, cell.cell_type)
-        val = model.max_division_functions[cell.cell_type](cell)
+function calculate_max_cell_divisions(model::CellModel, cell::Cell) # Pas besoin de Dim ici
+    if haskey(model.max_cell_division_functions, cell.cell_type)
+        val = model.max_cell_division_functions[cell.cell_type](cell)
         
         if isa(val, Int)
             return val
         elseif isa(val, AbstractString)
             return parse(Int, val)
         else
-            error("La fonction max_division_functions doit retourner un Int ou un String convertible en Int. Type reçu : $(typeof(val))")
+            error("La fonction max_cell_division_functions doit retourner un Int ou un String convertible en Int. Type reçu : $(typeof(val))")
         end
     else
         return 1
@@ -74,19 +74,19 @@ function calculate_max_divisions(model::CellModel, cell::Cell) # Pas besoin de D
 end
 
 function set_max_function!(model::CellModel, cell_type::Symbol, fct::Function)
-    if !haskey(model.max_division_functions, cell_type)
-        model.max_division_functions[cell_type] = fct
+    if !haskey(model.max_cell_division_functions, cell_type)
+        model.max_cell_division_functions[cell_type] = fct
     else
         error("The maximum division function for cell type $cell_type is already defined.")
     end
-    println("Maximum division function for cell type $cell_type set." , fct)
+    
 end
 
  
 function set_type_sequence!(model::CellModel, type_sequence::Vector{Int64})
     if hasfield(typeof(model), :cell_type_sequence)
         model.cell_type_sequence = type_sequence
-        println("Type sequence defined: $(model.cell_type_sequence)")
+        
     else
         error("The template does not contain a :cell_type_sequence field to store the type sequence.")
     end

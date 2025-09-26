@@ -57,13 +57,14 @@ function visualize_3D_cells(model::CellModel)
     end
 
     # Get the latest state
-    latest_cells = model.history[end].cells
-    latest_stromal_cells = model.history[end].stromal_cells
+    
+    final_state_tissue_cells = model.history[end].tissue_cells
+    final_stromal_tissue_cells= model.history[end].stromal_tissue_cells
 
     # Extract data for both cell types
-    cell_x, cell_y, cell_z, cell_colors_rgb_strings = _extract_cell_data_for_plot(model, latest_cells)
+    cell_x, cell_y, cell_z, cell_colors_rgb_strings = _extract_cell_data_for_plot(model, final_state_tissue_cells)
     
-    stromal_x, stromal_y, stromal_z, stromal_colors = _extract_cell_data_for_plot(model, latest_stromal_cells)
+    stromal_x, stromal_y, stromal_z, stromal_colors = _extract_cell_data_for_plot(model, final_stromal_tissue_cells)
 
     # Combine data from all cell types
     all_x = vcat(cell_x, stromal_x)
@@ -133,8 +134,8 @@ function visualize_history_3D_plotly_frames(model::CellModel, output_dir::String
     
     for (step_idx, history_entry) in enumerate(model.history)
         # Extract data for both cell types for the current step
-        cell_x, cell_y, cell_z, cell_colors = _extract_cell_data_for_plot(model, history_entry.cells)
-        stromal_x, stromal_y, stromal_z, stromal_colors = _extract_cell_data_for_plot(model, history_entry.stromal_cells)
+        cell_x, cell_y, cell_z, cell_colors = _extract_cell_data_for_plot(model, history_entry.tissue_cells)
+        stromal_x, stromal_y, stromal_z, stromal_colors = _extract_cell_data_for_plot(model, history_entry.stromal_tissue_cells)
 
         # Combine all data
         all_x = vcat(cell_x, stromal_x)
