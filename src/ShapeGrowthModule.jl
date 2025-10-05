@@ -51,12 +51,12 @@ include("visualization_3D.jl") # 3D visualization functions
     export run_simulation, cellular_dynamics
     export reconfigure_model_with_sequence!, set_subdivision!
     export visualize_cells_dict # Si vous avez une fonction visualize_cells exportable
-    export load_cell_data
+    export load_cell_data, get_indexed_subtissues
     export middle, add_initial_cell, create_default_initial_cells_dict, create_initial_stromal_cells_dict
     export get_generated_form, generate_and_sample
     export visualize_history
     export create_directions, create_directions_dict
-    export set_cell_data
+    export set_cell_data, _restore_cell_state!
     export create_max_cell_divisions_dict
     export set_type_sequence!
     export run!, visualization, set_max_function!, set_type_sequence!

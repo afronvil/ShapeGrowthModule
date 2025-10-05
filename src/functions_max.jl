@@ -60,7 +60,6 @@ end
 function calculate_max_cell_divisions(model::CellModel, cell::Cell) # Pas besoin de Dim ici
     if haskey(model.max_cell_division_functions, cell.cell_type)
         val = model.max_cell_division_functions[cell.cell_type](cell)
-        
         if isa(val, Int)
             return val
         elseif isa(val, AbstractString)

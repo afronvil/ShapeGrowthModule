@@ -2,8 +2,9 @@ using ShapeGrowthModule
 
 
 model = CellModel(
-    cell_type_sequence = [:WQ, :NQ, :EQ, :WQ  ] ,
+    cell_type_sequence = [:W, :N, :E, :W  ] ,
     grid_size = [100, 100, 100],
+    #grid_size = [100, 100],
 )
 # ------------------------------------
 
@@ -18,15 +19,15 @@ initial_cells_dict = create_default_initial_cells_dict(initial_cell_origin, mode
 model.tissue_cells = initial_cells_dict
 
 # Définition des fonctions de calcul de max_cell_divisions pour chaque type de cellule
-set_max_function!(model, :WQ, cell -> round(Int, 5 * sin(cell.coordinates[1])) + 5)
-set_max_function!(model, :NQ, cell -> 30)
-set_max_function!(model, :EQ, cell -> round(Int, 5 * sin(cell.coordinates[1])) + 5)
+set_max_function!(model, :W, cell -> round(Int, 5 * sin(cell.coordinates[2])) + 5)
+set_max_function!(model, :N, cell -> 30)
+set_max_function!(model, :E, cell -> round(Int, 5 * sin(cell.coordinates[2])) + 5)
 
 set_cell_data(model)
 
 println("Start simulation...")
 # Exécution de la simulation en utilisant l'argument mot-clé
-run!(model, num_steps=25)
+run!(model, num_steps=50)
 println("Simulation complete.")
 
 # Visualisation des résultats

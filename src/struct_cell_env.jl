@@ -9,8 +9,8 @@ using Parameters
     cell_type::Symbol
     initial_cell_type::Symbol
     last_division_type::Symbol
-    nbdiv::Int64 =6
-    max_cell_divisions::Int64
+    nbdiv::Int64 
+    max_cell_divisions::Int64 =6 
     is_alive::Bool = true
     has_proliferated_this_step::Bool = false
     current_type_index_in_sequence::Int64 = 1
