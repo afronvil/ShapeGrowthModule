@@ -166,6 +166,7 @@ function create_new_cell(model::CellModel, cell::Cell, new_coordinates::Vector{I
             new_coordinates, 
             0, 
             cell.cell_type, 
+            cell.cell_statut,
             cell.initial_cell_type, 
             cell.last_division_type, 
             cell.nbdiv, 
@@ -295,3 +296,4 @@ function proliferation(model::CellModel, tissue_cells::Dict{Vector{Int64}, Cell}
     end   
     return cells_to_differentiate
 end
+

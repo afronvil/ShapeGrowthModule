@@ -1,5 +1,4 @@
-using ColorTypes
-using Random
+# src/data_lettres.jl
 
 """
 Converts a cell type symbol and dimension into a list of direction vectors.

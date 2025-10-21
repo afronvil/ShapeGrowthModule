@@ -142,3 +142,32 @@ function create_default_initial_stromal_cells_dict(initial_stromal_cell_origin::
     println("Initial stromal cells created at $(initial_stromal_cell_origin) with type $(initial_stromal_type).")
     return stromal_cells
 end
+
+# Fonction utilitaire pour créer un ensemble compact de cellules
+# IMPORTANT: Le type de retour est changé de Cell à Cell
+function create_compact_cells(origin::Vector{Int64},  cell_statut::Symbol,cell_type::Symbol, radius::Int64)
+    cells_dict = Dict{Vector{Int64}, Cell}()
+    Dim = length(origin)
+    # Générer toutes les coordonnées dans un cube englobant
+    for offset in Iterators.product(( -radius:radius for _ in 1:Dim )...)
+        coord = origin .+ collect(offset)
+        # Vérifier si la coordonnée est dans la sphère de rayon 'radius'
+        if sum((coord .- origin).^2) <= radius^2
+            new_cell = Cell(
+                coordinates=coord,
+                timer=0,
+                cell_statut=cell_statut,
+                cell_type=cell_type,
+                initial_cell_type=cell_type,
+                last_division_type=cell_type,
+                nbdiv=0,
+                max_cell_divisions=5,
+                is_alive=true,
+                has_proliferated_this_step=false,
+                current_type_index_in_sequence=1,
+            )
+            cells_dict[coord] = new_cell
+        end
+    end
+    return cells_dict
+end

@@ -1,8 +1,5 @@
-using PlotlyJS
-using ColorTypes # Required for the RGB type
-
-import ..ShapeGrowthModule 
-
+# src/visualization.jl
+using ShapeGrowthModule
 """
     visualization(model::CellModel)
 

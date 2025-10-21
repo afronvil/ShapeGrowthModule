@@ -1,10 +1,5 @@
 # src/visualization_2D.jl
-
-using Plots
-using ColorTypes # Required for the RGB type
-
-# To reference types from the main module
-import ..ShapeGrowthModule
+using ShapeGrowthModule
 
 """
     visualize_final_state_2D(model::CellModel{2}, output_filename::String, block_size_rows::Int, block_size_cols::Int)

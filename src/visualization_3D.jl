@@ -1,9 +1,5 @@
 # src/visualization_3D.jl
-
-using PlotlyJS 
-using ColorTypes # Required for the RGB type
-
-import ..ShapeGrowthModule
+using ShapeGrowthModule
 
 """
     _extract_cell_data_for_plot(model::CellModel, cells_dict::Dict)

@@ -1,15 +1,15 @@
 # src/struct_cell_env.jl
 
-using Parameters 
 
 
 @with_kw mutable struct Cell
     coordinates::Vector{Int64}
     timer::Int64 = 0
-    cell_type::Symbol
-    initial_cell_type::Symbol
-    last_division_type::Symbol
-    nbdiv::Int64 
+    cell_type::Symbol = cell_type
+    cell_statut::Symbol = :NORMAL
+    initial_cell_type::Symbol = cell_type
+    last_division_type::Symbol = cell_type
+    nbdiv::Int64 =0
     max_cell_divisions::Int64 =6 
     is_alive::Bool = true
     has_proliferated_this_step::Bool = false

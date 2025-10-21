@@ -243,3 +243,55 @@ function apoptosis!(tissue_cells::Dict{Vector{Int64}, Cell}, cell::Cell)
     end
     return false
 end
+
+# ----------------------------------------------------------------------
+# 2. Fonction de Migration (Reprise de notre discussion précédente)
+# ----------------------------------------------------------------------
+function try_migrate!(
+    model::CellModel,
+    tissue_cells_to_migrate::Dict{Vector{Int64}, Cell}, 
+    v::Vector{Int64}
+)
+    migrated_cells = Dict{Vector{Int64}, Cell}()
+    old_coordinates_to_delete = Vector{Vector{Int64}}()
+
+    # On itère sur une copie des clés pour éviter les erreurs de modification en cours de boucle
+    for old_coords in keys(tissue_cells_to_migrate)
+        # S'assurer que la cellule existe toujours dans le dictionnaire global
+        !haskey(model.tissue_cells, old_coords) && continue
+        
+        cell = model.tissue_cells[old_coords]
+        new_coords = old_coords .+ v
+        
+        # 1. Vérification des limites de la grille
+        is_in_bounds = all(1 <= new_coords[i] <= model.grid_size[i] for i in eachindex(new_coords))
+        
+        # 2. Vérification que la nouvelle position est vide
+        is_spot_empty = !haskey(model.tissue_cells, new_coords)
+       
+        if is_in_bounds && is_spot_empty
+            # Migration réussie :
+            
+            # A. Met à jour les coordonnées de l'objet Cell
+            cell.coordinates = new_coords
+            
+            # B. Ajoute la cellule au dictionnaire des cellules migrées
+            migrated_cells[new_coords] = cell
+            
+            # C. Marque l'ancienne position pour la suppression
+            push!(old_coordinates_to_delete, old_coords)
+        end
+    end
+
+    # Mise à jour du dictionnaire global (Modification en place)
+    
+    # 1. Ajoute les cellules migrées à leurs nouvelles coordonnées
+    merge!(model.tissue_cells, migrated_cells)
+    
+    # 2. Supprime les cellules de leurs anciennes coordonnées
+    for old_coords in old_coordinates_to_delete
+        delete!(model.tissue_cells, old_coords)
+    end
+    
+    return migrated_cells
+end

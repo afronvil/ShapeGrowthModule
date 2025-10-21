@@ -47,8 +47,9 @@ include("visualization_3D.jl") # 3D visualization functions
 
 
     export Cell, StromalCell, CellSetByCoordinates, CellModel
-    export create_default_initial_cells_dict, initial_cells_dict_default
+    export create_default_initial_cells_dict, initial_cells_dict_default, create_compact_cells
     export run_simulation, cellular_dynamics
+    export try_migrate!
     export reconfigure_model_with_sequence!, set_subdivision!
     export visualize_cells_dict # Si vous avez une fonction visualize_cells exportable
     export load_cell_data, get_indexed_subtissues
@@ -64,7 +65,7 @@ include("visualization_3D.jl") # 3D visualization functions
     export visualize_history_3D_plotly_frames
     export visualize_final_state_2D  # <<< Assurez-vous que cette ligne est présente
     export visualize_history_animation_2D # Si elle est dans visualization_2D.jl        
-    
+
     export calculate_spatial_moments # <<< NOUVEAU : Exporter la fonction de moments
 
 
