@@ -83,3 +83,9 @@ Submit a pull request with your changes.
 
 ## 📄 License
 This project is licensed under the MIT license.
+
+---
+## 📧 Contact
+If you have any questions, suggestions, or would like to collaborate, you can contact me at:
+**alexandra.fronville[at]univ-brest.fr**
+*(Replace "[at]" with "@" to send me an email.)*
