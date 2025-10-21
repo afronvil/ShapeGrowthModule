@@ -114,6 +114,7 @@ function create_default_initial_cells_dict(initial_cell_origin::Vector{Int64}, i
         coordinates=initial_cell_origin,
         timer=0,
         cell_type=initial_type,
+        cell_statut=:PROLIFERATE,
         initial_cell_type=initial_type,
         last_division_type=initial_type,
         nbdiv=0,

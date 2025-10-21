@@ -1,13 +1,47 @@
-ShapeGrowthModule
+# ShapeGrowthModule
 
+**Simulates the growth of 3D shapes using cellular automata.**
 
-This project simulates the growth of shapes using cellular automata principles. It includes tools for initializing, simulating, and visualizing the growth process.
+This module allows you to model, simulate, and visualize the growth of cellular structures in a discrete 3D environment. It is designed to be flexible and extensible, with tools for defining growth rules, managing cellular interactions, and generating interactive visualizations.
 
-Cell Modeling: Definition and management of cell structures with properties such as type, position, color and division potential.
-Environment Management: Representation of a discrete environment (3D grid) for cellular interactions.
-Data Loading: Read cell type configurations and properties from XML files.
-Growth simulation: Implementation of cell dynamics including division and differentiation according to defined rules.
-3D visualization: Tools for visualizing the state of cells at different stages of the simulation, including interactive animations.
+---
+
+## 🔧 Features
+
+- **Cell modeling**: Definition of cells with customizable properties (type, position, color, division potential).
+- **3D environment**: Discrete grid to represent interactions between cells.
+- **Dynamic simulation**: Rules for cell division and differentiation.
+- **Interactive visualization**: 3D visualization tools based on PlotlyJS to analyze results.
+
+---
+
+## 📦 Installation
+
+### Prerequisites
+- **Julia ≥ 1.6** ([Download Julia](https://julialang.org/downloads/))
+
+### Steps
+1. Clone the repository:
+```bash
+   git clone https://github.com/afronvil/ShapeGrowthModule.git
+   cd ShapeGrowthModule
+```
+2.  Launch Julia and install dependencies:
+```bash
+using Pkg
+Pkg.activate(".")
+Pkg.instantiate()
+```
+3.  Usage:
+Load the module
+```julia
+using ShapeGrowthModule
+```
+Run a simulation
+```julia
+include("expl/flag.jl")
+```
+
 
 Project structure :
 
@@ -15,94 +49,37 @@ The ShapeGrowthModels module is organized as follows:
 ```
 ShapeGrowthModule/
 ├── src/
-│     ├── ShapeGrowthModels.jl # Main module
+│     ├── ShapeGrowthModule.jl # Main module
 │     ├── struct_cell_env.jl # Definition of Cell, CellModel, etc. structures.
-│     ├── data_xml.jl # Functions for reading/writing XML files (eg, cellTypes.xml)
+│     ├── data_lettres.jl # Functions for reading/writing XML files (eg, cellTypes.xml)
 │     ├── functions.jl # General utility functions
 │     ├── functions_max.jl # Specific utility functions (if distinct)
-│     ├── visualization_xml. jl # XML-based visualization functions (if applicable)
+│     ├── visualization. jl # XML-based visualization functions (if applicable)
+│     ├── visualization_2D.jl # Functions for 3D visualization with PlotlyJS
 │     ├── visualization_3D.jl # Functions for 3D visualization with PlotlyJS
-│     └── capture_basin.jl # Specific logic (eg, for catch basin analysis)
+│     ├── utils.jl
+│     └── struct_cell_env.jl # Specific logic (eg, for catch basin analysis)
 ├── expl/
-│     └── flag.jl # Example script or simulation run
-└── xml/
-     └── cellTypes130.xml # Example of cell type definition file
-```
-Installation
-
-To use this module, make sure you have Julia (version 1.6 or higher recommended) installed on your system.
-
-Clone the repository (if it's a Git repository) :
-git clone https://github.com/votre_utilisateur/ShapeGrowthModule.git
-cd ShapeGrowthModule
-
-If it's not a Git repository, simply navigate to the project's root folder.
-
-Launch Julia and install the :
-
-```julia
-using Pkg
-Pkg.add("Plots")
-Pkg.add("Parameters")
-Pkg.add("PlotlyJS")
-Pkg.add("PlotlyBase")
-Pkg.add("ColorSchemes")
-Pkg.add("ColorTypes")
-Pkg.add("EzXML")
+      ├── flag.jl # Example script or simulation run
+      ├── gastrulation.jl # Example script or simulation run
+      ├── vertebra.jl # Example script or simulation run
+      └── villosites.jl # Example script or simulation run
 ```
 
-In the project's root directory (where the src folder is located), launch Julia :
+## 📊 Vizualisation
+Les résultats des simulations peuvent être visualisés en 3D grâce à PlotlyJS. 
+Output example:
+Example 1: Growth of 2D structures (vertebra)
+![Growth of 2D structures (vertebra)](images/vertebra.png)
+Example 2: Advanced 3D growth simulation (villosites)
+![Advanced 3D growth simulation (villosites)](images/villosite.png)
 
-Une fois dans le REPL Julia, activez l'environnement du projet et installez les dépendances :
+## 🤝 Contribute
+Contributions are welcome! To suggest improvements:
 
-```julia
-    julia> using Pkg
-    julia> Pkg.activate(".") # Activate the current project environment
-    julia> Pkg.instantiate() # Installs all dependencies listed in Project.toml
-```
-
-How to use :
-
-In the file $HOME/.julia/config/startup.jl, 
-```
-push!(LOAD_PATH, "/path/to/rep_containing_ShapeGrowthModule.jl/")
-```
-Restart Julia (modified) 
-
-then in Julia
-
-```julia
-using ShapeGrowthModule
-```
-
-Here's a basic example of how to run a simulation and visualize the results using the module.
-
-The main example script is expl/flag.jl. You can launch it from the Julia REPL:
-```Julia
-julia> include("expl/flag.jl")
-```
-
-Cell type configuration :
-
-Cell type properties (colors, maximum divisions, growth directions) are defined in XML files, such as xml/cellTypes130.xml. You can modify these files to adapt the behavior of your simulated cells.
+Open an issue to discuss changes.
+Submit a pull request with your changes.
 
 
-Contributions : 
-
-Contributions are welcome! Please open an issue or submit a pull request if you have suggestions or improvements.
-
-
-License:
-
-This project is licensed under the [MIT License].
-
-
-Contact: 
-
-If you have any questions or comments, please contact : Alexandra Fronville 
-
-alexandra.fronville@univ-brest.fr/ 
-
-https://github.com/afronvil/ShapeGrowthModule].
-
-I hope you find this README useful! Please feel free to modify it and adapt it further to your specific needs.
+## 📄 License
+This project is licensed under the MIT license.

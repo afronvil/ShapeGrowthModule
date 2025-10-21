@@ -15,10 +15,10 @@ module ShapeGrowthModule
 using EzXML
 using ColorSchemes
 using ColorTypes
-using EzXML
 using Plots
 using Parameters
 using PlotlyJS
+using Random
 
 const PROJECT_ROOT = dirname(dirname(@__FILE__)) 
 # Define the path to the XML file
@@ -47,26 +47,25 @@ include("visualization_3D.jl") # 3D visualization functions
 
 
     export Cell, StromalCell, CellSetByCoordinates, CellModel
-    export create_default_initial_cells_dict, initial_cells_dict_default, create_compact_cells
-    export run_simulation, cellular_dynamics
-    export try_migrate!
-    export reconfigure_model_with_sequence!, set_subdivision!
-    export visualize_cells_dict # Si vous avez une fonction visualize_cells exportable
+    export run!, cellular_dynamics
+    export try_migrate!, try_proliferate!
     export load_cell_data, get_indexed_subtissues
-    export middle, add_initial_cell, create_default_initial_cells_dict, create_initial_stromal_cells_dict
+    export middle, add_initial_cell
     export get_generated_form, generate_and_sample
-    export visualize_history
+    
     export create_directions, create_directions_dict
-    export set_cell_data, _restore_cell_state!
+    export create_compact_cells
     export create_max_cell_divisions_dict
-    export set_type_sequence!
-    export run!, visualization, set_max_function!, set_type_sequence!
+    export create_default_initial_cells_dict
+    export create_initial_stromal_cells_dict
+    export set_cell_data, _restore_cell_state!
+    export set_type_sequence!, set_max_function!
+    
+    export visualization
     export visualize_3D_cells
     export visualize_history_3D_plotly_frames
-    export visualize_final_state_2D  # <<< Assurez-vous que cette ligne est présente
-    export visualize_history_animation_2D # Si elle est dans visualization_2D.jl        
-
-    export calculate_spatial_moments # <<< NOUVEAU : Exporter la fonction de moments
+    export visualize_final_state_2D  
+    export visualize_history_animation_2D 
 
 
 end # module ShapeGrowthModule
